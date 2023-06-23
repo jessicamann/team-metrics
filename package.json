@@ -9,6 +9,24 @@
     "test": "jest",
     "start": "node dist/index.js"
   },
+  "lint-staged": {
+    "*": "prettier --write",
+    "*.ts": "eslint --fix"
+  },
+  "eslintConfig": {
+    "parser": "@typescript-eslint/parser",
+    "extends": [
+      "plugin:@typescript-eslint/recommended",
+      "plugin:prettier/recommended"
+    ],
+    "plugins": [
+      "@typescript-eslint",
+      "prettier"
+    ],
+    "rules": {
+      "prettier/prettier": "error"
+    }
+  },
   "author": "",
   "license": "ISC",
   "devDependencies": {
