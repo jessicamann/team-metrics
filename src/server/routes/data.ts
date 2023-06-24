@@ -1,5 +1,5 @@
 import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
-import { createWriteStream, writeFileSync } from "fs";
+import { createWriteStream, existsSync } from "fs";
 import { pipeline } from "stream";
 import { promisify } from "util";
 
@@ -12,6 +12,21 @@ export default async function (f: FastifyInstance) {
     const pump = promisify(pipeline);
     await pump(file, createWriteStream(`./uploads/${filename}`));
 
-    reply.code(201).send();
+    const trimmedFileName = filename.replace(".csv", "");
+    reply.code(303).header("location", `/data/${trimmedFileName}`).send();
   });
+
+  f.get(
+    "/data/:filename",
+    (
+      request: FastifyRequest<{ Params: { filename: string } }>,
+      reply: FastifyReply,
+    ) => {
+      if (existsSync(`./uploads/${request.params.filename}.csv`)) {
+        reply.view("/templates/team.ejs", { dataSet: {} });
+      } else {
+        reply.code(404).send();
+      }
+    },
+  );
 }

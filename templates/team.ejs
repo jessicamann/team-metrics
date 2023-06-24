@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <link href="https://unpkg.com/runcss@^0/dist/preflight.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
+    <script defer src="https://use.fontawesome.com/releases/v5.14.0/js/all.js"></script>
+    <title>Team Metrics</title>
+</head>
+<body>
+<section class="hero">
+    <div class="hero-body is-dark is-bold">
+        <div class="container">
+            <h1 class="title">
+                Team Metrics
+            </h1>
+            <h2 class="subtitle">
+                Click on the below sections to see the metrics for your team.
+            </h2>
+        </div>
+    </div>
+</section>
+<section class="hero is-medium is-link">
+    <a href="<%- dataSet %>/cycle-time">
+        <div class="hero-body">
+            <div class="container">
+                <h1 class="title">
+                    Cycle Time
+                </h1>
+                <h2 class="subtitle">
+                    Describes the efficiency of a system in processing units of work. It begins at the
+                    moment when the new arrival enters the “in progress” stage, and somebody is actually working on
+                    it.
+                </h2>
+            </div>
+        </div>
+    </a>
+</section>
+<section class="hero is-medium is-info">
+    <a href="<%- dataSet %>/throughput">
+        <div class="hero-body">
+            <div class="container">
+                <h1 class="title">
+                    Throughput
+                </h1>
+                <h2 class="subtitle">
+                    The number of units of work completed in a given time period. Provides insight into
+                    both the rate and rhythm of delivery.
+                </h2>
+            </div>
+        </div>
+    </a>
+</section>
+<section class="hero is-medium is-success">
+    <a href="<%- dataSet %>/progress">
+        <div class="hero-body">
+            <div class="container">
+                <h1 class="title">
+                    Progress
+                </h1>
+                <h2 class="subtitle">
+                    Birds eye view into completion percentage by feature.
+                </h2>
+            </div>
+        </div>
+    </a>
+</section>
+<section class="hero is-medium is-primary">
+    <a href="<%- dataSet %>/forecast">
+        <div class="hero-body">
+            <div class="container">
+                <h1 class="title">
+                    Forecast
+                </h1>
+                <h2 class="subtitle">
+                    When will it be done? How much can we do?
+                </h2>
+            </div>
+        </div>
+    </a>
+</section>
+</body>
+</html>
