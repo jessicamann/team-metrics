@@ -68,7 +68,7 @@ describe("GET /data/:filname/cycletime", () => {
 
     const response = await server.inject({
       method: "GET",
-      url: "/data/foobar",
+      url: "/data/foobar/cycletime",
     });
 
     expect(response.statusCode).toEqual(404);
@@ -90,5 +90,36 @@ describe("GET /data/:filname/cycletime", () => {
     expect(response.statusCode).toEqual(200);
     expect(response.body).toMatch(/<\/html>/);
     expect(response.body).toMatch(/Team Cycle Time/);
+  });
+});
+
+describe("GET /data/:filname/throughput", () => {
+  it("returns a 404 if a given file does not exist", async () => {
+    const server = buildServer({ logger: false });
+
+    const response = await server.inject({
+      method: "GET",
+      url: "/data/foobar/throughput",
+    });
+
+    expect(response.statusCode).toEqual(404);
+  });
+
+  it("returns a 200 with the the metrics home page for the uploaded file", async () => {
+    const server = buildServer({ logger: false });
+
+    writeFileSync(
+      "./uploads/throughput-test.csv",
+      "id,startDate,endDate\nTeam-123,,\nTEAM-2,2023-06-09,2023-06-14\n",
+    );
+
+    const response = await server.inject({
+      method: "GET",
+      url: "/data/throughput-test/throughput",
+    });
+
+    expect(response.statusCode).toEqual(200);
+    expect(response.body).toMatch(/<\/html>/);
+    expect(response.body).toMatch(/Weekly Throughput/);
   });
 });

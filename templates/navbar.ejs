@@ -7,37 +7,37 @@
     <div id="navbarBasicExample" class="navbar-menu">
         <div class="navbar-start">
             <% if (active === "dashboard") { %>
-                <a class="navbar-item is-active" href="<%- dataSet %>/dashboard">
+                <a class="navbar-item is-active" href="#">
             <% } else { %>
-                <a class="navbar-item" href="<%- dataSet %>/dashboard">
+                <a class="navbar-item" href="/data/<%- dataSet %>/dashboard">
             <% } %>
             Dashboard</a>
 
             <% if (active === "cycleTime") { %>
-                <a class="navbar-item is-active" href="<%- dataSet %>/cycle-time">
+                <a class="navbar-item is-active" href="#">
             <% } else { %>
-                <a class="navbar-item" href="<%- dataSet %>/cycle-time">
+                <a class="navbar-item" href="/data/<%- dataSet %>/cycletime">
             <% } %>
             Cycle Time</a>
 
             <% if (active === "throughput") { %>
-                <a class="navbar-item is-active" href="<%- dataSet %>/throughput">
+                <a class="navbar-item is-active" href="#">
             <% } else { %>
-                <a class="navbar-item" href="<%- dataSet %>/throughput">
+                <a class="navbar-item" href="/data/<%- dataSet %>/throughput">
             <% } %>
             Throughput</a>
 
             <% if (active === "progress") { %>
-                <a class="navbar-item is-active" href="<%- dataSet %>/progress">
+                <a class="navbar-item is-active" href=#">
             <% } else { %>
-                <a class="navbar-item" href="<%- dataSet %>/progress">
+                <a class="navbar-item" href="/data/<%- dataSet %>/progress">
             <% } %>
             Progress</a>
 
             <% if (active === "forecast") { %>
-                <a class="navbar-item is-active" href="<%- dataSet %>/forecast">
+                <a class="navbar-item is-active" href="#">
             <% } else { %>
-                <a class="navbar-item" href="<%- dataSet %>/forecast">
+                <a class="navbar-item" href="/data/<%- dataSet %>/forecast">
             <% } %>
             Forecast</a>
         </div>

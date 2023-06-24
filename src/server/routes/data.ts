@@ -3,6 +3,7 @@ import { createWriteStream, existsSync } from "fs";
 import { pipeline } from "stream";
 import { promisify } from "util";
 import { toScatterChart } from "../../cycletime/chart";
+import { toWeeklyThroughput } from "../../throughput/chart";
 
 export default async function (f: FastifyInstance) {
   f.post("/data", async (request: FastifyRequest, reply: FastifyReply) => {
@@ -56,6 +57,28 @@ export default async function (f: FastifyInstance) {
         p95,
         p85,
         p50,
+      });
+    },
+  );
+
+  f.get(
+    "/data/:filename/throughput",
+    async (
+      request: FastifyRequest<{ Params: { filename: string } }>,
+      reply: FastifyReply,
+    ) => {
+      const dataset = request.params.filename;
+      const filename = `${dataset}.csv`;
+      const filepath = `./uploads/${filename}`;
+
+      if (!existsSync(filepath)) {
+        return reply.code(404).send();
+      }
+
+      const chart = await toWeeklyThroughput(filepath);
+      return reply.view("/templates/throughput.ejs", {
+        dataSet: dataset,
+        throughput: chart,
       });
     },
   );

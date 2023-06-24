@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.3.0/dist/chart.umd.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3.0.0/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-trendline@2.0.3/dist/chartjs-plugin-trendline.min.js"></script>
+    <title>Weekly Throughput</title>
+</head>
+<body>
+<%- include("./navbar.ejs", {active: "throughput", dataSet: dataSet}) %>
+<div class="container is-fluid mt-4">
+    <div style="display: flex; flex-flow: row wrap; justify-content: space-around;">
+        <div style="width: 50vw">
+            <canvas id="weekly-throughput" width="400" height="400"></canvas>
+        </div>
+        <section class="hero" style="width: 25vw">
+            <div class="hero-body">
+                <div class="container">
+                    <h1 class="title">
+                        What is our rate of delivering value to the customer?
+                    </h1>
+                    <br>
+                    <h2 class="subtitle">
+                        Use the trend data to identify delivery rhythm. Variations from week to week is expected.
+                        <br>
+                        <br>
+                        However, consistent large dips and spikes might be indicative of potential waste in the delivery
+                        process, where work is queued up and move along in bulk.
+                    </h2>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+<canvas id="weekly-throughput" width="400" height="400"></canvas>
+<script type="module">
+    var context = document.getElementById('weekly-throughput').getContext('2d');
+    new Chart(context, <%- JSON.stringify(throughput) %>)
+</script>
+</body>
+</html>
