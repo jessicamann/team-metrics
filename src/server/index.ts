@@ -23,5 +23,9 @@ export function buildServer({ logger = true } = {}) {
     logLevel: "debug",
   });
 
+  fastify.setNotFoundHandler((_, reply) => {
+    reply.code(303).header("location", `/oops`).send();
+  });
+
   return fastify;
 }
