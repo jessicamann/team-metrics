@@ -49,13 +49,13 @@ export default async function (f: FastifyInstance) {
         return reply.code(404).send();
       }
 
-      const scatterChart = await toScatterChart(filepath);
+      const { chart, p50, p85, p95 } = await toScatterChart(filepath);
       return reply.view("/templates/cycletime.ejs", {
         dataSet: dataset,
-        cycleTimeChart: scatterChart,
-        ninetyFifthPercentile: "15",
-        eithyFifthPercentile: "10",
-        fiftyPercentile: "8",
+        cycleTimeChart: chart,
+        p95,
+        p85,
+        p50,
       });
     },
   );

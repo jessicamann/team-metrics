@@ -77,7 +77,10 @@ describe("GET /data/:filname/cycletime", () => {
   it("returns a 200 with the the metrics home page for the uploaded file", async () => {
     const server = buildServer({ logger: false });
 
-    writeFileSync("./uploads/test-file.csv", "foobar");
+    writeFileSync(
+      "./uploads/test-file.csv",
+      "id,startDate,endDate\nTeam-123,,\nTEAM-2,2023-06-09,2023-06-14\n",
+    );
 
     const response = await server.inject({
       method: "GET",
