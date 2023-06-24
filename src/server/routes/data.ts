@@ -22,8 +22,24 @@ export default async function (f: FastifyInstance) {
       request: FastifyRequest<{ Params: { filename: string } }>,
       reply: FastifyReply,
     ) => {
-      if (existsSync(`./uploads/${request.params.filename}.csv`)) {
-        reply.view("/templates/team.ejs", { dataSet: {} });
+      const filename = request.params.filename;
+      if (existsSync(`./uploads/${filename}.csv`)) {
+        reply.view("/templates/team.ejs", { dataSet: filename });
+      } else {
+        reply.code(404).send();
+      }
+    },
+  );
+
+  f.get(
+    "/data/:filename/cycletime",
+    (
+      request: FastifyRequest<{ Params: { filename: string } }>,
+      reply: FastifyReply,
+    ) => {
+      const filename = request.params.filename;
+      if (existsSync(`./uploads/${filename}.csv`)) {
+        reply.view("/templates/cycletime.ejs", { dataSet: filename });
       } else {
         reply.code(404).send();
       }

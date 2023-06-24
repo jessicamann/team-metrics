@@ -61,3 +61,31 @@ describe("GET /data/:filename", () => {
     expect(response.body).toMatch(/<\/html>/);
   });
 });
+
+describe("GET /data/:filname/cycletime", () => {
+  it("returns a 404 if a given file does not exist", async () => {
+    const server = buildServer({ logger: false });
+
+    const response = await server.inject({
+      method: "GET",
+      url: "/data/foobar",
+    });
+
+    expect(response.statusCode).toEqual(404);
+  });
+
+  it("returns a 200 with the the metrics home page for the uploaded file", async () => {
+    const server = buildServer({ logger: false });
+
+    writeFileSync("./uploads/test-file.csv", "foobar");
+
+    const response = await server.inject({
+      method: "GET",
+      url: "/data/test-file/cycletime",
+    });
+
+    expect(response.statusCode).toEqual(200);
+    expect(response.body).toMatch(/<\/html>/);
+    expect(response.body).toMatch(/Welcome to cycle time/);
+  });
+});
