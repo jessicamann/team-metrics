@@ -12,21 +12,24 @@ function toOneDonutChart(feature: string, stories: StoryData[]) {
       labels: ["Not started", "In progress", "Done"],
       datasets: [
         {
-          label: "Item count by state",
+          label: "stories",
           data: [count["Not started"], count["In progress"], count.Done],
           backgroundColor: [gray, cyberYellow, emerald, blush],
         },
       ],
     },
     options: {
-      title: {
-        display: true,
-        text: feature,
-        position: "top",
-        fontSize: 16,
-      },
-      legend: {
-        position: "bottom",
+      responsive: true,
+      plugins: {
+        title: {
+          display: true,
+          text: feature,
+          position: "top",
+          fontSize: 16,
+        },
+        legend: {
+          position: "bottom",
+        },
       },
     },
   };
