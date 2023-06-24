@@ -1,0 +1,5 @@
+<canvas id=<%- id %> width="400" height="400"></canvas>
+<script type="module">
+    var context = document.getElementById("<%- id %>").getContext('2d');
+    new Chart(context, <%- JSON.stringify(chart) %>)
+</script>

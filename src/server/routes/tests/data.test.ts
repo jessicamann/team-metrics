@@ -123,3 +123,34 @@ describe("GET /data/:filname/throughput", () => {
     expect(response.body).toMatch(/Weekly Throughput/);
   });
 });
+
+describe("GET /data/:filname/progress", () => {
+  it("returns a 404 if a given file does not exist", async () => {
+    const server = buildServer({ logger: false });
+
+    const response = await server.inject({
+      method: "GET",
+      url: "/data/foobar/progress",
+    });
+
+    expect(response.statusCode).toEqual(404);
+  });
+
+  it("returns a 200 with the the metrics home page for the uploaded file", async () => {
+    const server = buildServer({ logger: false });
+
+    writeFileSync(
+      "./uploads/progress-test.csv",
+      "id,startDate,endDate\nTeam-123,,\nTEAM-2,2023-06-09,2023-06-14\n",
+    );
+
+    const response = await server.inject({
+      method: "GET",
+      url: "/data/progress-test/progress",
+    });
+
+    expect(response.statusCode).toEqual(200);
+    expect(response.body).toMatch(/<\/html>/);
+    expect(response.body).toMatch(/Progress/);
+  });
+});
