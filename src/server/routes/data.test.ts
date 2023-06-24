@@ -20,7 +20,7 @@ describe("POST /data", () => {
     const server = buildServer({ logger: false });
 
     const form = formAutoContent({
-      myFile: createReadStream(`${__dirname}/fixtures/test-file.csv`),
+      myFile: createReadStream("./fixtures/test-file.csv"),
     });
 
     const response = await server.inject({
