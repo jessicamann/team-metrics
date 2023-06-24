@@ -3,7 +3,7 @@ import { readFromCsvAndDo } from "../common/csv";
 import { byWeek, toThroughput } from "./calculate";
 import { StoryData } from "./type";
 
-function readAsStory(filepath: string) {
+export function readAsStory(filepath: string) {
   return readFromCsvAndDo<StoryData>(filepath, (row, skip) => {
     const { id, endDate } = row as {
       id: string;

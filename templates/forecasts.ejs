@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/cal-heatmap@4.2.3/dist/cal-heatmap.min.js"></script>
+    <script defer src="https://use.fontawesome.com/releases/v5.14.0/js/all.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cal-heatmap@4.2.3/dist/cal-heatmap.css">
+    <title>Forecast</title>
+</head>
+<body>
+<%- include("./navbar.ejs", {active: "forecast", dataSet: dataSet}) %>
+<div class="container is-fluid mt-4">
+    <div style="display: flex; flex-flow: row wrap; justify-content: space-around;">
+        <div style="width: 50vw">
+            <div id="cal-heatmap"></div>
+        </div>
+        <section class="hero" style="width: 35vw">
+            <div class="hero-body">
+                <div class="container">
+                    <h1 class="title">
+                        Forecasting towards completion date
+                    </h1>
+                    <br>
+                    <h2 class="subtitle">
+                        There are currently <%- remainingStories -%> of unfinished items in the backlog. <br>
+                        Based on our past throughput, we forecast the following completion dates and confidence levels:
+                        <div class="icon-text mt-3">
+                            <span class="icon has-background-white-bis">
+                                <i class="fas fa-info-circle"></i>
+                            </span>
+                            <span class="is-italic is-size-6">10000 trials using past weekly throughput data</span>
+                        </div>
+                    </h2>
+                    <br>
+                    <h3>
+                        <p>We are 50% confident that we will complete the remaining work items by <%- p50 -%></p>
+                        <br>
+                        <p>We are 85% confident that we will complete the remaining work items by <%- p85 -%></p>
+                        <br>
+                        <p>We are 95% confident that we will complete the remaining work items by <%- p95 -%></p>
+                    </h3>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+<script>
+    const cal = new CalHeatmap();
+    cal.paint({
+        data: {
+            source: '../uploads/grogu.json',
+            type: 'json',
+            x: 'date',
+            y: d => parseInt(['simulations']),
+            groupY: 'max',
+        },
+        considerMissingDataAsZero: false,
+        verticalOrientation: false,
+        range: 3,
+        date: { start: new Date() },
+        scale: { color: { type: 'threshold', scheme: 'Greens', domain: [50, 85, 95] } },
+        domain: {
+            type: 'month',
+            padding: [10, 10, 10, 10],
+            label: { position: 'top' },
+        },
+        subDomain: { type: 'xDay', radius: 2, width: 15, height: 15, label: 'D' },
+        itemSelector: '#cal-heatmap',
+    })
+</script>
+</body>
+</html>

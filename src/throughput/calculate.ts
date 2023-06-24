@@ -1,4 +1,4 @@
-import { endOfWeek } from "date-fns";
+import { endOfDay, endOfWeek } from "date-fns";
 import { groupBy, map } from "lodash";
 import { StoryData, ThroughputData } from "./type";
 
@@ -8,6 +8,12 @@ export const byWeek: GroupFn = (
   data: StoryData[],
 ): Record<string, StoryData[]> => {
   return groupBy(data, (story) => endOfWeek(story.completedAt));
+};
+
+export const byDay: GroupFn = (
+  data: StoryData[],
+): Record<string, StoryData[]> => {
+  return groupBy(data, (story) => endOfDay(story.completedAt));
 };
 
 export function toThroughput(
