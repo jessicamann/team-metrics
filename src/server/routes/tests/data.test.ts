@@ -86,6 +86,6 @@ describe("GET /data/:filname/cycletime", () => {
 
     expect(response.statusCode).toEqual(200);
     expect(response.body).toMatch(/<\/html>/);
-    expect(response.body).toMatch(/Welcome to cycle time/);
+    expect(response.body).toMatch(/Team Cycle Time/);
   });
 });

@@ -6,21 +6,61 @@
             content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <link href="https://unpkg.com/runcss@^0/dist/preflight.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
-    <script defer src="https://use.fontawesome.com/releases/v5.14.0/js/all.js"></script>
-    <title>Team Metrics</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.bundle.js"></script>
+    <title>Team Cycle Time</title>
 </head>
 <body>
-<section class="hero">
-    <div class="hero-body">
-        <div class="container">
-            <h1 class="title">
-                Welcome to cycle time
-            </h1>
-            <h2 class="subtitle">
-                Work in progress
-            </h2>
+    <%- include("./navbar.ejs", {active: "cycleTime", dataSet: dataSet}) %>
+    <div class="container is-fluid mt-4">
+        <div style="display: flex; flex-flow: row wrap; justify-content: space-around;">
+            <div style="width: 50vw">
+                <canvas id="cycleTimeChart" width="400" height="400"></canvas>
+            </div>
+            <section class="hero" style="width: 25vw">
+                <div class="hero-body">
+                    <div class="container">
+                        <h1 class="title">
+                            Historically, 85% of our stories have been completed
+                            in <%- eithyFifthPercentile -%> days or less.
+                        </h1>
+                        <br>
+                        <h2 class="subtitle">
+                            50% in <%- fiftyPercentile -%> days or less.<br>
+                            95% in <%- ninetyFifthPercentile -%> days or less.
+                        </h2>
+                    </div>
+                </div>
+            </section>
         </div>
     </div>
-</section>
+    <script type="module">
+        var context = document.getElementById('cycleTimeChart').getContext('2d');
+        var chart = <%- JSON.stringify(cycleTimeChart) %>
+        var chartWithLabels = Object.assign(chart, {
+            "options": {
+                ...chart.options,
+                "tooltips": {
+                    "callbacks": {
+                        "enabled": true,
+                        "title": function(items) {
+                            return items[0].value + ' days'
+                        },
+                        "label": () => {},
+                        "footer": function(items, data) {
+                            let ids = []
+                            items.forEach(item => {
+                                var id = data.datasets[item.datasetIndex].data[item.index].id
+                                if(id) {
+                                    ids.push(id)
+                                }
+                            })
+                            return ids.length > 0 ? "ID(s): " + ids.join(', ') : ''
+                        }
+                    }
+                }
+            }
+        })
+        new Chart(context, chartWithLabels)
+    </script>
 </body>
 </html>

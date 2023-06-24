@@ -2,6 +2,7 @@ import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import { createWriteStream, existsSync } from "fs";
 import { pipeline } from "stream";
 import { promisify } from "util";
+import { toScatterChart } from "../../cycletime/chart";
 
 export default async function (f: FastifyInstance) {
   f.post("/data", async (request: FastifyRequest, reply: FastifyReply) => {
@@ -13,7 +14,10 @@ export default async function (f: FastifyInstance) {
     await pump(file, createWriteStream(`./uploads/${filename}`));
 
     const trimmedFileName = filename.replace(".csv", "");
-    reply.code(303).header("location", `/data/${trimmedFileName}`).send();
+    return reply
+      .code(303)
+      .header("location", `/data/${trimmedFileName}`)
+      .send();
   });
 
   f.get(
@@ -33,16 +37,26 @@ export default async function (f: FastifyInstance) {
 
   f.get(
     "/data/:filename/cycletime",
-    (
+    async (
       request: FastifyRequest<{ Params: { filename: string } }>,
       reply: FastifyReply,
     ) => {
-      const filename = request.params.filename;
-      if (existsSync(`./uploads/${filename}.csv`)) {
-        reply.view("/templates/cycletime.ejs", { dataSet: filename });
-      } else {
-        reply.code(404).send();
+      const dataset = request.params.filename;
+      const filename = `${dataset}.csv`;
+      const filepath = `./uploads/${filename}`;
+
+      if (!existsSync(filepath)) {
+        return reply.code(404).send();
       }
+
+      const scatterChart = await toScatterChart(filepath);
+      return reply.view("/templates/cycletime.ejs", {
+        dataSet: dataset,
+        cycleTimeChart: scatterChart,
+        ninetyFifthPercentile: "15",
+        eithyFifthPercentile: "10",
+        fiftyPercentile: "8",
+      });
     },
   );
 }
