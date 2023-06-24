@@ -2,6 +2,7 @@ import path from "path";
 import Fastify from "fastify";
 import fastifyView from "@fastify/view";
 import fastifyAutoload from "@fastify/autoload";
+import fastifyMultipart from "@fastify/multipart";
 
 export function buildServer({ logger = true } = {}) {
   const fastify = Fastify({
@@ -13,6 +14,8 @@ export function buildServer({ logger = true } = {}) {
       ejs: require("ejs"),
     },
   });
+
+  fastify.register(fastifyMultipart);
 
   fastify.register(fastifyAutoload, {
     dir: path.join(__dirname, "routes"),

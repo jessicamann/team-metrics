@@ -1,0 +1,47 @@
+<section class="hero is-medium is-secondary">
+    <div class="hero-body">
+        <div class="container">
+            <h1 class="title">
+                Upload your data
+            </h1>
+            <form name="data-upload" action="/data" method="post" enctype="multipart/form-data">
+                <div class="field is-horizontal">
+                    <div class="field-body">
+                        <div class="field">
+                            <div class="control">
+                                <div id="data-upload" class="file has-name is-fullwidth">
+                                    <label class="file-label">
+                                        <input class="file-input" type="file" name="data" accept="text/csv">
+                                        <span class="file-cta">
+                                            <span class="file-icon">
+                                                <i class="fas fa-upload"></i>
+                                            </span>
+                                            <span class="file-label">
+                                                Choose a file…
+                                            </span>
+                                        </span>
+                                        <span class="file-name">
+                                            No file uploaded
+                                        </span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <input class="button is-link" type="submit" value="Send">
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+<script>
+    const fileInput = document.querySelector('#data-upload input[type=file]');
+    fileInput.onchange = () => {
+        if (fileInput.files.length > 0) {
+            const fileName = document.querySelector('#data-upload .file-name');
+            fileName.textContent = fileInput.files[0].name;
+        }
+    }
+</script>

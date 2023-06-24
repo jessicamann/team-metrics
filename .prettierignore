@@ -5,3 +5,5 @@
 .nvmrc
 
 templates/
+
+**/*.csv

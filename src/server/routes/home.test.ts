@@ -1,4 +1,4 @@
-import { buildServer } from "../";
+import { buildServer } from "..";
 
 describe("GET /", () => {
   it("returns 200 with html when requested", async () => {
