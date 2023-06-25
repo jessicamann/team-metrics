@@ -1,5 +1,5 @@
 import { writeFileSync } from "fs";
-import { readAsStoryData } from "./transform";
+import { readAsStoryData } from "./reader";
 
 describe("readAsStoryData", () => {
   it("skips any story without a feature", async () => {

@@ -37,5 +37,7 @@ describe("countByStatus", () => {
     ]);
 
     expect(result["In progress"]).toEqual(2);
+    expect(result["Done"]).toEqual(1);
+    expect(result["Not started"]).toEqual(1);
   });
 });

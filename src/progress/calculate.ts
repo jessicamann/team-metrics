@@ -1,12 +1,20 @@
 import { countBy, groupBy } from "lodash";
 import { Feature, StoryData } from "./type";
 
+/**
+ *
+ * @internal
+ */
 export function groupByFeature(
   data: StoryData[],
 ): Record<Feature, StoryData[]> {
   return groupBy(data, "feature");
 }
 
+/**
+ *
+ * @internal
+ */
 export function countByStatus(data: StoryData[]): {
   "In progress": number;
   "Not started": number;

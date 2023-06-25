@@ -1,6 +1,6 @@
 import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import { existsSync } from "fs";
-import { toProgressCharts } from "../../../../progress/chart";
+import { showAsDonutChartsByFeature } from "../../../../progress";
 
 export default async function (f: FastifyInstance) {
   f.get(
@@ -23,7 +23,7 @@ export default async function (f: FastifyInstance) {
       const options = request.query.features
         ? { only: request.query.features }
         : {};
-      const charts = await toProgressCharts(filepath, options);
+      const charts = await showAsDonutChartsByFeature(filepath, options);
       return reply.view("/templates/progress/index.ejs", {
         dataSet: dataset,
         features: charts,

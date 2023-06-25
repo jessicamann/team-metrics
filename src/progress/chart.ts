@@ -1,7 +1,7 @@
 import { map } from "lodash";
 import { blush, cyberYellow, emerald, gray } from "../colors";
 import { countByStatus, groupByFeature } from "./calculate";
-import { readAsStoryData } from "./transform";
+import { readAsStoryData } from "./reader";
 import { Options, StoryData } from "./type";
 
 function toOneDonutChart(feature: string, stories: StoryData[]) {
@@ -35,7 +35,10 @@ function toOneDonutChart(feature: string, stories: StoryData[]) {
   };
 }
 
-export async function toProgressCharts(filepath: string, options?: Options) {
+export async function showAsDonutChartsByFeature(
+  filepath: string,
+  options?: Options,
+) {
   const stories = await readAsStoryData(filepath, options);
   const byFeatures = groupByFeature(stories);
 
