@@ -24,4 +24,17 @@ describe("GET /data/:filname/progress", () => {
     expect(response.body).toMatch(/<\/html>/);
     expect(response.body).toMatch(/Progress/);
   });
+
+  it("returns only the specified features if provided in the request", async () => {
+    const server = buildServer({ logger: false });
+
+    const response = await server.inject({
+      method: "GET",
+      url: "/data/progress-test/progress?features=FeatureB",
+    });
+
+    expect(response.statusCode).toEqual(200);
+    expect(response.body).toMatch(/FeatureB/);
+    expect(response.body).not.toMatch(/FeatureA/);
+  });
 });
