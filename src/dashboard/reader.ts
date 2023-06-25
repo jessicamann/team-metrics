@@ -1,11 +1,25 @@
-import { groupBy } from "lodash";
+import { groupBy, some } from "lodash";
 import { readFromCsvAndDo } from "../common/csv";
 import { byWeek, readAsThroughput } from "../throughput";
+import { isAfter, subMonths } from "date-fns";
 
-function readAsForecastable(filepath: string) {
+export type Forecastable = {
+  id: string;
+  completed: boolean;
+  feature: string;
+  recentlyWorkedOn: boolean;
+};
+
+function isRecent(...dates: string[]) {
+  const oneMonthAgo = subMonths(new Date(), 1);
+  return some(dates, (d) => isAfter(new Date(d), oneMonthAgo));
+}
+
+function readAsForecastable(filepath: string): Promise<Forecastable[]> {
   return readFromCsvAndDo(filepath, (row, skip) => {
-    const { id, endDate, feature } = row as {
+    const { id, startDate, endDate, feature } = row as {
       id: string;
+      startDate: string;
       endDate: string;
       feature: string;
     };
@@ -15,10 +29,8 @@ function readAsForecastable(filepath: string) {
     }
 
     const completed = !!endDate;
-    const completedAt = completed
-      ? new Date(endDate)
-      : (null as unknown as Date);
-    return { id, completed, feature, completedAt };
+    const recentlyWorkedOn = isRecent(startDate, endDate);
+    return { id, completed, feature, recentlyWorkedOn };
   });
 }
 
@@ -27,7 +39,7 @@ export async function readIntoProgressAndForecastable(filepath: string) {
     r.toThroughput(byWeek).map((d) => d.total),
   );
 
-  const forecastablePromise = await readAsForecastable(filepath).then((r) =>
+  const forecastablePromise = readAsForecastable(filepath).then((r) =>
     groupBy(r, "feature"),
   );
 

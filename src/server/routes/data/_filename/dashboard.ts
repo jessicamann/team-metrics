@@ -20,8 +20,10 @@ export default async function (f: FastifyInstance) {
         return reply.code(404).send();
       }
 
-      const { outliers, p25, p75, p85 } = await cycletimesSummary(filepath);
-      const summary = await forecastSummary(filepath);
+      const [{ outliers, p25, p75, p85 }, summary] = await Promise.all([
+        cycletimesSummary(filepath),
+        forecastSummary(filepath, { onlyRecent: true }),
+      ]);
 
       return reply.view("/templates/dashboard/index.ejs", {
         dataSet: dataset,
