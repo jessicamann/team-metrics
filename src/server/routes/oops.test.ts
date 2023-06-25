@@ -1,15 +1,16 @@
-import { buildServer } from "../..";
+import { buildServer } from "..";
 
-describe("GET /", () => {
-  it("returns 200 with html when requested", async () => {
+describe("GET /oops", () => {
+  it("returns oops page", async () => {
     const server = buildServer({ logger: false });
 
     const response = await server.inject({
       method: "GET",
-      url: "/",
+      url: "/oops",
     });
 
     expect(response.statusCode).toEqual(200);
     expect(response.body).toMatch(/<\/html>/);
+    expect(response.body).toMatch(/Oops/);
   });
 });
