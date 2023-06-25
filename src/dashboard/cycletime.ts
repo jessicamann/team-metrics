@@ -1,5 +1,5 @@
-import percentile from "percentile";
-import { toCycleTime } from "../cycletime/data";
+import { percentiles } from "../common/math";
+import { readAsCycleTiime } from "../cycletime";
 import { toOutlyingItems } from "./toOutlyingItems";
 import { ItemId } from "./type";
 
@@ -11,13 +11,10 @@ type Summary = {
 };
 
 export async function cycletimesSummary(filepath: string): Promise<Summary> {
-  const cycleTimeData = await toCycleTime(filepath);
+  const cycleTimeData = await readAsCycleTiime(filepath);
+  const outliers = toOutlyingItems(cycleTimeData);
   const times = cycleTimeData.map((d) => d.cycletime);
+  const { [25]: p25, [75]: p75, [85]: p85 } = percentiles(times, 25, 75, 85);
 
-  return {
-    outliers: toOutlyingItems(cycleTimeData),
-    p25: percentile(25, times) as number,
-    p75: percentile(75, times) as number,
-    p85: percentile(85, times) as number,
-  };
+  return { outliers, p25, p75, p85 };
 }

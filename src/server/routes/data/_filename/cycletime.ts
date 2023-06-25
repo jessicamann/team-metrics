@@ -1,6 +1,6 @@
 import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import { existsSync } from "fs";
-import { toScatterChart } from "../../../../cycletime/chart";
+import { showAsScatterChart } from "../../../../cycletime";
 
 export default async function (f: FastifyInstance) {
   f.get(
@@ -17,7 +17,7 @@ export default async function (f: FastifyInstance) {
         return reply.code(404).send();
       }
 
-      const { chart, p50, p85, p95 } = await toScatterChart(filepath);
+      const { chart, p50, p85, p95 } = await showAsScatterChart(filepath);
       return reply.view("/templates/cycletime/index.ejs", {
         dataSet: dataset,
         cycleTimeChart: chart,

@@ -1,10 +1,10 @@
-import { cycletimeBetween, toCycleTime } from "./data";
+import { cycletimeBetween, readAsCycleTiime } from "./reader";
 import { CycleTime } from "./types";
 
-describe("toCycleTime", () => {
+describe("readAsCycleTiime", () => {
   let subject: CycleTime[];
   beforeAll(async () => {
-    subject = await toCycleTime("./fixtures/some-data.csv");
+    subject = await readAsCycleTiime("./fixtures/some-data.csv");
   });
 
   it("returns the data as cycle time", () => {

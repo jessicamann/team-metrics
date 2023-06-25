@@ -1,9 +1,9 @@
 import { blueGreen, coral, emerald, freesia } from "../colors";
-import { percentileAt } from "./confidence";
-import { toCycleTime } from "./data";
+import { percentiles } from "../common/math";
+import { readAsCycleTiime } from "./reader";
 
 type CycleTime = number;
-export type Point = {
+type Point = {
   x: Date;
   y: CycleTime;
 };
@@ -38,18 +38,25 @@ function toPLine(
   };
 }
 
-export async function toScatterChart(filepath: string) {
-  const data: Point[] = (await toCycleTime(filepath)).map((story) => ({
+export async function showAsScatterChart(filepath: string) {
+  const _data = await readAsCycleTiime(filepath);
+
+  const data: Point[] = _data.map((story) => ({
     x: story.completedAt,
     y: story.cycletime,
     id: story.id,
   }));
+
+  const onlyTimeData = _data.map((d) => d.cycletime);
+  const {
+    [50]: p50,
+    [85]: p85,
+    [95]: p95,
+  } = percentiles(onlyTimeData, 50, 85, 95);
+
   const [from, to] = edgeXAxis(data);
-  const p50 = percentileAt(50, data);
   const lintAt50 = toPLine("50%", p50, from, to, blueGreen);
-  const p85 = percentileAt(85, data);
   const lineAt85 = toPLine("85%", p85, from, to, freesia);
-  const p95 = percentileAt(95, data);
   const lineAt95 = toPLine("95%", p95, from, to, coral);
 
   const chart = {
@@ -92,10 +99,5 @@ export async function toScatterChart(filepath: string) {
     },
   };
 
-  return {
-    chart,
-    p50: p50,
-    p85: p85,
-    p95: p95,
-  };
+  return { chart, p50, p85, p95 };
 }
