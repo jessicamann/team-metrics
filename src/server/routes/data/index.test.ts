@@ -2,7 +2,7 @@
 // @ts-ignore: this library is not type friendly
 import formAutoContent from "form-auto-content";
 import { createReadStream, existsSync } from "fs";
-import { buildServer } from "..";
+import { buildServer } from "../..";
 
 describe("POST /data", () => {
   it("returns 406 if no file was provided", async () => {
