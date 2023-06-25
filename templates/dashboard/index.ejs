@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.bundle.js"></script>
+    <script defer src="https://use.fontawesome.com/releases/v5.14.0/js/all.js"></script>
+    <title>Dashboard</title>
+</head>
+<body>
+<%- include("../navbar.ejs", {active: "dashboard", dataSet: dataSet}) %>
+<div class="tile is-ancestor" style="margin: 10px 0px; justify-content: center">
+    <div class="tile is-vertical">
+        <div class="tile">
+            <div class="tile is-parent">
+                <article class="tile is-child notification is-primary">
+                    <%- include('cycleTimeSummary.fragment.ejs', {...cycleTimeData}); %>
+                </article>
+            </div>
+            <div class="tile is-parent">
+                <article class="tile is-child notification is-info">
+                    <%- include('consistency.fragment.ejs', {...consistency}); %>
+                </article>
+            </div>
+        </div>
+        <div class="tile is-parent">
+            <article class="tile is-child notification is-warning">
+                <%- include('outliers.fragment.ejs', {...outliers}) %>
+            </article>
+        </div>
+    </div>
+    <div class="tile is-parent">
+        <article class="tile is-child notification has-background-light">
+            <%- include('forecastedProgress.fragment.ejs', {buckets: forecastedProgress}) %>
+        </article>
+    </div>
+</div>
+</body>
+</html>

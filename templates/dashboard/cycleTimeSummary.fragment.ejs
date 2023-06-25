@@ -1,0 +1,18 @@
+<p class="title">Historically...</p>
+<% if (threshold.value) { %>
+    <p class="subtitle">
+    <span style="font-size: xx-large;">
+        <%- threshold.text %>
+    </span> of items are completed in
+        <span style="font-size: xx-large">
+        <%- threshold.value %>
+    </span> days or less
+    </p>
+<% } else { %>
+    <p class="subtitle">
+        ...we haven't finished anything
+    </p>
+    <p class="subtitle">
+        ¯\_(ツ)_/¯
+    </p>
+<% }%>

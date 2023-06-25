@@ -3,10 +3,11 @@ import { createWriteStream, existsSync } from "fs";
 import { pipeline } from "stream";
 import { promisify } from "util";
 import { toScatterChart } from "../../cycletime/chart";
-import { toWeeklyThroughput } from "../../throughput/chart";
-import { toProgressCharts } from "../../progress/chart";
+import { cycletimesSummary } from "../../dashboard/cycletime";
 import { forecastHowLong } from "../../forecasting/chart";
-import { format } from "date-fns";
+import { toProgressCharts } from "../../progress/chart";
+import { toWeeklyThroughput } from "../../throughput/chart";
+import { forecastSummary } from "../..//dashboard/forecast";
 
 export default async function (f: FastifyInstance) {
   f.post("/data", async (request: FastifyRequest, reply: FastifyReply) => {
@@ -139,6 +140,50 @@ export default async function (f: FastifyInstance) {
         p50: result.p50,
         p85: result.p85,
         p95: result.p95,
+      });
+    },
+  );
+
+  f.get(
+    "/data/:filename/dashboard",
+    async (
+      request: FastifyRequest<{
+        Params: { filename: string };
+        Querystring: { features: "array" };
+      }>,
+      reply: FastifyReply,
+    ) => {
+      const dataset = request.params.filename;
+      const filename = `${dataset}.csv`;
+      const filepath = `./uploads/${filename}`;
+
+      if (!existsSync(filepath)) {
+        return reply.code(404).send();
+      }
+
+      const { outliers, p25, p75, p85 } = await cycletimesSummary(filepath);
+      const summary = await forecastSummary(filepath);
+
+      return reply.view("/templates/dashboard/index.ejs", {
+        dataSet: dataset,
+        cycleTimeData: {
+          threshold: {
+            text: "85%",
+            value: p85,
+          },
+        },
+        outliers: {
+          threshold: {
+            text: "85th",
+            value: p85,
+          },
+          items: outliers,
+        },
+        consistency: {
+          p25,
+          p75,
+        },
+        forecastedProgress: summary,
       });
     },
   );

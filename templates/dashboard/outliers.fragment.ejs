@@ -1,0 +1,26 @@
+<p class="title">Might want to take a look...</p>
+<% if (items.length > 0) { %>
+    <p class="subtitle">
+        <span style="font-size: x-large;"><%- items.length %></span> items took more than
+        <span style="font-size: x-large"> <%- threshold.value%> days</span>
+        <span style="font-size: small"> (<%- threshold.text%> percentile)</span>
+    </p>
+<% } else { %>
+    <p class="subtitle">
+        All good here!
+    </p>
+<% } %>
+<div class="columns is-multiline">
+    <% items.forEach(function(item){ %>
+        <div class="icon-text column is-one-third">
+            <span class="icon has-text-danger">
+                <i class="far fa-flushed"></i>
+            </span>
+            <% if (item) { %>
+                <span class="tag is-white is-medium"><%- item %></span>
+            <% } else { %>
+                <span class="tag is-white is-medium">missing ID</span>
+            <% } %>
+        </div>
+    <% }); %>
+</div>

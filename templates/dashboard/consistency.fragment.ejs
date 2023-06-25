@@ -1,0 +1,13 @@
+<p class="title">How consistent are we?</p>
+<% if (locals.p25 && locals.p75) { %>
+    <p class="subtitle">
+        Most items are completed between
+        <span style="font-size: xx-large;"> <%- p25 %> </span> to
+        <span style="font-size: xx-large;"> <%- p75 %> </span>
+        days.
+    </p>
+<% } else { %>
+    <p class="subtitle">
+        ...get working, team!
+    </p>
+<% }%>
