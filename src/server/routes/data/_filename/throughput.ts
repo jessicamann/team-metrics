@@ -1,6 +1,6 @@
 import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import { existsSync } from "fs";
-import { toWeeklyThroughput } from "../../../../throughput/chart";
+import { showAsLineChart } from "../../../../throughput";
 
 export default async function (f: FastifyInstance) {
   f.get(
@@ -17,7 +17,7 @@ export default async function (f: FastifyInstance) {
         return reply.code(404).send();
       }
 
-      const chart = await toWeeklyThroughput(filepath);
+      const chart = await showAsLineChart(filepath);
       return reply.view("/templates/throughput/index.ejs", {
         dataSet: dataset,
         throughput: chart,

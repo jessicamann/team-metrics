@@ -1,10 +1,9 @@
-import { countBy, groupBy, map } from "lodash";
-import { readFromCsvAndDo } from "..//common/csv";
-import { run } from "../forecasting/montecarlo";
-import { byWeek, toThroughput } from "../throughput/calculate";
-import percentile from "percentile";
 import { format } from "date-fns";
-import { readAsStory } from "../throughput/chart";
+import { countBy, groupBy, map } from "lodash";
+import percentile from "percentile";
+import { byWeek, readAsThroughput } from "../throughput";
+import { readFromCsvAndDo } from "../common/csv";
+import { run } from "../forecasting/montecarlo";
 
 type Summary = {
   name: string;
@@ -20,10 +19,9 @@ type Summary = {
 };
 
 export async function forecastSummary(filepath: string): Promise<Summary[]> {
-  const throughputData = await readAsStory(filepath);
-  const pastThroughput = toThroughput(throughputData, byWeek).map(
-    (d) => d.total,
-  );
+  const pastThroughput = (await readAsThroughput(filepath))
+    .toThroughput(byWeek)
+    .map((d) => d.total);
 
   const data = await readFromCsvAndDo(filepath, (row, skip) => {
     const { id, endDate, feature } = row as {

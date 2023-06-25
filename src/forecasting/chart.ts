@@ -1,8 +1,7 @@
 import { format } from "date-fns";
 import { writeFileSync } from "fs";
+import { readAsThroughput, byWeek } from "../throughput";
 import percentile from "percentile";
-import { byWeek, toThroughput } from "../throughput/calculate";
-import { readAsStory } from "../throughput/chart";
 import { run } from "./montecarlo";
 import { readInUnfinishedStories } from "./transform";
 
@@ -15,10 +14,10 @@ export async function forecastHowLong(filpath: string): Promise<{
   p85: ShortDate;
   p95: ShortDate;
 }> {
-  const throughputData = await readAsStory(filpath);
-  const pastThroughput = toThroughput(throughputData, byWeek).map(
-    (d) => d.total,
-  );
+  const pastThroughput = (await readAsThroughput(filpath))
+    .toThroughput(byWeek)
+    .map((d) => d.total);
+
   const remainingStories = await readInUnfinishedStories(filpath);
 
   const results = run(10000, remainingStories, pastThroughput).sort();
