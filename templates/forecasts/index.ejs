@@ -52,17 +52,16 @@
     const cal = new CalHeatmap();
     cal.paint({
         data: {
-            source: '../uploads/grogu.json',
-            type: 'json',
-            x: 'date',
-            y: d => parseInt(['simulations']),
+            source: <%- JSON.stringify(calendarData) %>,
+            x: d => d['date'],
+            y: d => +d['value'],
             groupY: 'max',
+            defaultValue: 0,
         },
-        considerMissingDataAsZero: false,
-        verticalOrientation: false,
-        range: 3,
+        verticalOrientation: true,
+        range: 12,
         date: { start: new Date() },
-        scale: { color: { type: 'threshold', scheme: 'Greens', domain: [50, 85, 95] } },
+        scale: { color: { type: 'threshold', scheme: 'BuGn', domain: [50, 85, 95] } },
         domain: {
             type: 'month',
             padding: [10, 10, 10, 10],

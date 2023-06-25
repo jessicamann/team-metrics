@@ -1,5 +1,4 @@
 import { format } from "date-fns";
-import { writeFileSync } from "fs";
 import { percentiles } from "../common/math";
 import { runMonteCarlo } from "./montecarlo";
 import { readIntoForecastingData } from "./reader";
@@ -7,7 +6,7 @@ import { readIntoForecastingData } from "./reader";
 type ShortDate = string;
 
 export async function showAsCalendar(filepath: string): Promise<{
-  filePath: string;
+  calendarData: { date: number; value?: number }[];
   remainingStories: number;
   p50: ShortDate;
   p85: ShortDate;
@@ -23,20 +22,15 @@ export async function showAsCalendar(filepath: string): Promise<{
     [100]: p100,
   } = percentiles(results, 50, 85, 95, 100);
 
-  const resultFile = filepath.replace(".csv", ".json");
-  writeFileSync(
-    `${resultFile}`,
-    JSON.stringify([
-      { date: p50, simulations: 50 },
-      { date: p85, simulations: 85 },
-      { date: p95, simulations: 95 },
-      { date: p100, simulations: 100 },
-    ]),
-  );
-
   return {
+    calendarData: [
+      { date: new Date().getTime() },
+      { date: p50, value: 50 },
+      { date: p85, value: 85 },
+      { date: p95, value: 95 },
+      { date: p100, value: 100 },
+    ],
     remainingStories: remaining,
-    filePath: resultFile,
     p50: format(p50, "MM/dd/yy"),
     p85: format(p85, "MM/dd/yy"),
     p95: format(p95, "MM/dd/yy"),

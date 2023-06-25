@@ -25,6 +25,7 @@ export default async function (f: FastifyInstance) {
       return reply.view("/templates/forecasts/index.ejs", {
         dataSet: dataset,
         remainingStories: result.remainingStories,
+        calendarData: result.calendarData,
         p50: result.p50,
         p85: result.p85,
         p95: result.p95,
