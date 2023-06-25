@@ -22,7 +22,7 @@ export default async function (f: FastifyInstance) {
 
       const result = await forecastHowLong(filepath);
 
-      return reply.view("/templates/forecasts.ejs", {
+      return reply.view("/templates/forecasts/index.ejs", {
         dataSet: dataset,
         remainingStories: result.remainingStories,
         p50: result.p50,

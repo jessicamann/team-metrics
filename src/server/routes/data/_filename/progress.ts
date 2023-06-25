@@ -1,12 +1,15 @@
 import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import { existsSync } from "fs";
-import { toWeeklyThroughput } from "../../../../throughput/chart";
+import { toProgressCharts } from "../../../../progress/chart";
 
 export default async function (f: FastifyInstance) {
   f.get(
-    "/throughput",
+    "/progress",
     async (
-      request: FastifyRequest<{ Params: { filename: string } }>,
+      request: FastifyRequest<{
+        Params: { filename: string };
+        Querystring: { features: "array" };
+      }>,
       reply: FastifyReply,
     ) => {
       const dataset = request.params.filename;
@@ -17,10 +20,13 @@ export default async function (f: FastifyInstance) {
         return reply.code(404).send();
       }
 
-      const chart = await toWeeklyThroughput(filepath);
-      return reply.view("/templates/throughput.ejs", {
+      const options = request.query.features
+        ? { only: request.query.features }
+        : {};
+      const charts = await toProgressCharts(filepath, options);
+      return reply.view("/templates/progress/index.ejs", {
         dataSet: dataset,
-        throughput: chart,
+        features: charts,
       });
     },
   );

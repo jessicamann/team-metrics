@@ -27,7 +27,7 @@ export default async function (f: FastifyInstance) {
     ) => {
       const filename = request.params.filename;
       if (existsSync(`./uploads/${filename}.csv`)) {
-        reply.view("/templates/team.ejs", { dataSet: filename });
+        reply.view("/templates/team/index.ejs", { dataSet: filename });
       } else {
         reply.code(404).send();
       }

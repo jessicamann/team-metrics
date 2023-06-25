@@ -18,7 +18,7 @@ export default async function (f: FastifyInstance) {
       }
 
       const { chart, p50, p85, p95 } = await toScatterChart(filepath);
-      return reply.view("/templates/cycletime.ejs", {
+      return reply.view("/templates/cycletime/index.ejs", {
         dataSet: dataset,
         cycleTimeChart: chart,
         p95,
