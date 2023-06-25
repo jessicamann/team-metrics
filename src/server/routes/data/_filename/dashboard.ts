@@ -1,7 +1,6 @@
 import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import { existsSync } from "fs";
-import { cycletimesSummary } from "../../../../dashboard/cycletime";
-import { forecastSummary } from "../../../../dashboard/forecast";
+import { cycletimesSummary, forecastSummary } from "../../../../dashboard";
 
 export default async function (f: FastifyInstance) {
   f.get(

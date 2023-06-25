@@ -1,6 +1,6 @@
 import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import { existsSync } from "fs";
-import { forecastHowLong } from "../../../../forecasting/chart";
+import { showAsCalendar } from "../../../../forecasting";
 
 export default async function (f: FastifyInstance) {
   f.get(
@@ -20,7 +20,7 @@ export default async function (f: FastifyInstance) {
         return reply.code(404).send();
       }
 
-      const result = await forecastHowLong(filepath);
+      const result = await showAsCalendar(filepath);
 
       return reply.view("/templates/forecasts/index.ejs", {
         dataSet: dataset,

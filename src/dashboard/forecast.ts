@@ -1,9 +1,8 @@
 import { format } from "date-fns";
-import { countBy, groupBy, map } from "lodash";
-import percentile from "percentile";
-import { byWeek, readAsThroughput } from "../throughput";
-import { readFromCsvAndDo } from "../common/csv";
-import { run } from "../forecasting/montecarlo";
+import { countBy, map } from "lodash";
+import { percentiles } from "../common/math";
+import { runMonteCarlo } from "../forecasting";
+import { readIntoProgressAndForecastable } from "./reader";
 
 type Summary = {
   name: string;
@@ -19,33 +18,19 @@ type Summary = {
 };
 
 export async function forecastSummary(filepath: string): Promise<Summary[]> {
-  const pastThroughput = (await readAsThroughput(filepath))
-    .toThroughput(byWeek)
-    .map((d) => d.total);
+  const { throughput, forecastableByFeature } =
+    await readIntoProgressAndForecastable(filepath);
 
-  const data = await readFromCsvAndDo(filepath, (row, skip) => {
-    const { id, endDate, feature } = row as {
-      id: string;
-      endDate: string;
-      feature: string;
-    };
-
-    if (!feature) {
-      skip();
-    }
-
-    const completed = !!endDate;
-    const completedAt = completed
-      ? new Date(endDate)
-      : (null as unknown as Date);
-    return { completed, feature, completedAt: completedAt, id };
-  });
-
-  return map(groupBy(data, "feature"), (value, key) => {
+  return map(forecastableByFeature, (value, key) => {
     const completed = countBy(value, "completed")["true"];
     const incomplete = countBy(value, "completed")["false"];
 
-    const simulations = run(10000, incomplete, pastThroughput);
+    const simulations = runMonteCarlo(10000, incomplete, throughput);
+    const {
+      [50]: p50,
+      [85]: p85,
+      [95]: p95,
+    } = percentiles(simulations, 50, 85, 95);
 
     return {
       name: key,
@@ -54,9 +39,9 @@ export async function forecastSummary(filepath: string): Promise<Summary[]> {
         total: value.length,
       },
       forecast: {
-        p50: format(percentile(50, simulations) as number, "MM/dd/yy"),
-        p85: format(percentile(85, simulations) as number, "MM/dd/yy"),
-        p95: format(percentile(95, simulations) as number, "MM/dd/yy"),
+        p50: format(p50, "MM/dd/yy"),
+        p85: format(p85, "MM/dd/yy"),
+        p95: format(p95, "MM/dd/yy"),
       },
     };
   });

@@ -1,34 +1,31 @@
 import { format } from "date-fns";
 import { writeFileSync } from "fs";
-import { readAsThroughput, byWeek } from "../throughput";
-import percentile from "percentile";
-import { run } from "./montecarlo";
-import { readInUnfinishedStories } from "./transform";
+import { percentiles } from "../common/math";
+import { runMonteCarlo } from "./montecarlo";
+import { readIntoForecastingData } from "./reader";
 
 type ShortDate = string;
 
-export async function forecastHowLong(filpath: string): Promise<{
+export async function showAsCalendar(filepath: string): Promise<{
   filePath: string;
   remainingStories: number;
   p50: ShortDate;
   p85: ShortDate;
   p95: ShortDate;
 }> {
-  const pastThroughput = (await readAsThroughput(filpath))
-    .toThroughput(byWeek)
-    .map((d) => d.total);
+  const { throughput, remaining } = await readIntoForecastingData(filepath);
 
-  const remainingStories = await readInUnfinishedStories(filpath);
+  const results = runMonteCarlo(10000, remaining, throughput).sort();
+  const {
+    [50]: p50,
+    [85]: p85,
+    [95]: p95,
+    [100]: p100,
+  } = percentiles(results, 50, 85, 95, 100);
 
-  const results = run(10000, remainingStories, pastThroughput).sort();
-  const p50 = percentile(50, results) as number;
-  const p85 = percentile(85, results) as number;
-  const p95 = percentile(95, results) as number;
-  const p100 = percentile(100, results) as number;
-
-  const filename = filpath.replace(".csv", ".json");
+  const resultFile = filepath.replace(".csv", ".json");
   writeFileSync(
-    `${filename}`,
+    `${resultFile}`,
     JSON.stringify([
       { date: p50, simulations: 50 },
       { date: p85, simulations: 85 },
@@ -38,8 +35,8 @@ export async function forecastHowLong(filpath: string): Promise<{
   );
 
   return {
-    remainingStories,
-    filePath: "path-to-data",
+    remainingStories: remaining,
+    filePath: resultFile,
     p50: format(p50, "MM/dd/yy"),
     p85: format(p85, "MM/dd/yy"),
     p95: format(p95, "MM/dd/yy"),
