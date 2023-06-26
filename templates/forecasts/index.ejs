@@ -16,10 +16,18 @@
 <%- include("../navbar.ejs", {active: "forecast", dataSet: dataSet}) %>
 <div class="container is-fluid mt-4">
     <div style="display: flex; flex-flow: row wrap; justify-content: space-around;">
-        <div style="width: 50vw">
+        <section style="width: 50vw" class="mt-6">
             <div id="cal-heatmap"></div>
-            <div id="cal-heatmap-legend"></div>
-        </div>
+            <nav class="level mt-6 ">
+                <div class="level-left">
+                    <a href="#" onclick="cal.previous()" class="pagination-previous">← Previous</a>
+                    <a href="#" onclick="cal.next()" class="pagination-next">Next →</a>
+                </div>
+                <div class="level-right pr-6">
+                    <div id="cal-heatmap-legend"></div>
+                </div>
+            </nav>
+        </section>
         <section class="hero" style="width: 35vw">
             <div class="hero-body">
                 <div class="container">
@@ -59,9 +67,9 @@
             y: d => +d['value'],
             groupY: 'max',
         },
-        verticalOrientation: true,
-        range: 12,
-        date: { start: new Date(), highlight: [new Date()] },
+        verticalOrientation: false,
+        range: 3,
+        date: { start: new Date() },
         scale: {
             color: {
                 type: 'threshold',
@@ -73,11 +81,23 @@
         domain: {
             type: 'month',
             padding: [10, 10, 10, 10],
-            label: { position: 'top' },
+            label: { position: 'top', text: "MMMM 'YY" },
         },
-        subDomain: { type: 'xDay', radius: 2, width: 15, height: 15, label: 'D' },
+        subDomain: {
+            type: 'xDay',
+            radius: 7,
+            width: 30,
+            height: 30,
+            label: 'D'
+        },
         itemSelector: '#cal-heatmap',
-    },[[Legend, { itemSelector: '#cal-heatmap-legend' }]])
+    },
+    [
+        [Legend, { 
+            itemSelector: '#cal-heatmap-legend', 
+            label: 'Confidence level'
+        }]
+    ])
 </script>
 </body>
 </html>
