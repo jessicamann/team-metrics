@@ -9,6 +9,7 @@
     <script src="https://cdn.jsdelivr.net/npm/cal-heatmap@4.2.3/dist/cal-heatmap.min.js"></script>
     <script defer src="https://use.fontawesome.com/releases/v5.14.0/js/all.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cal-heatmap@4.2.3/dist/cal-heatmap.css">
+    <script src="https://unpkg.com/cal-heatmap/dist/plugins/Legend.min.js"></script>
     <title>Forecast</title>
 </head>
 <body>
@@ -17,6 +18,7 @@
     <div style="display: flex; flex-flow: row wrap; justify-content: space-around;">
         <div style="width: 50vw">
             <div id="cal-heatmap"></div>
+            <div id="cal-heatmap-legend"></div>
         </div>
         <section class="hero" style="width: 35vw">
             <div class="hero-body">
@@ -53,15 +55,21 @@
     cal.paint({
         data: {
             source: <%- JSON.stringify(calendarData) %>,
-            x: d => d['date'],
+            x: 'date',
             y: d => +d['value'],
             groupY: 'max',
-            defaultValue: 0,
         },
         verticalOrientation: true,
         range: 12,
-        date: { start: new Date() },
-        scale: { color: { type: 'threshold', scheme: 'BuGn', domain: [50, 85, 95] } },
+        date: { start: new Date(), highlight: [new Date()] },
+        scale: {
+            color: {
+                type: 'threshold',
+                range: ["#a50f15","#de2d26","#fcae91","#a6d96a","#1a9641"],
+                interpolate: 'lab',
+                domain: [20, 50, 85, 95]
+            }
+        },
         domain: {
             type: 'month',
             padding: [10, 10, 10, 10],
@@ -69,7 +77,7 @@
         },
         subDomain: { type: 'xDay', radius: 2, width: 15, height: 15, label: 'D' },
         itemSelector: '#cal-heatmap',
-    })
+    },[[Legend, { itemSelector: '#cal-heatmap-legend' }]])
 </script>
 </body>
 </html>
