@@ -8,9 +8,9 @@ type ForecastingData = {
 
 async function readInUnfinishedStories(filepath: string): Promise<number> {
   const result = await readFromCsvAndDo(filepath, (row, skip) => {
-    const { startDate } = row as { startDate: string };
+    const { endDate } = row as { endDate: string };
 
-    if (startDate) return row;
+    if (!endDate) return row;
     skip();
   });
 
