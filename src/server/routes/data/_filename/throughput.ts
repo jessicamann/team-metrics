@@ -1,6 +1,6 @@
 import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import { existsSync } from "fs";
-import { showAsLineChart } from "../../../../throughput";
+import { showAsLineChart } from "@app/throughput";
 
 export default async function (f: FastifyInstance) {
   f.get(

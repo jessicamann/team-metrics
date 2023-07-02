@@ -1,5 +1,5 @@
-import { byWeek, readAsThroughput } from "../throughput";
-import { readFromCsvAndDo } from "../common/csv";
+import { byWeek, readAsThroughput } from "@app/throughput";
+import { readFromCsvAndDo } from "@app/common/csv";
 
 type ForecastingData = {
   remaining: number;

@@ -1,5 +1,5 @@
 import { differenceInCalendarDays } from "date-fns";
-import { readFromCsvAndDo } from "../common/csv";
+import { readFromCsvAndDo } from "@app/common/csv";
 import { CycleTime } from "./types";
 
 export function cycletimeBetween(end: Date, start: Date): number {

@@ -1,6 +1,6 @@
 import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import { existsSync } from "fs";
-import { showAsDonutChartsByFeature } from "../../../../progress";
+import { showAsDonutChartsByFeature } from "@app/progress";
 
 export default async function (f: FastifyInstance) {
   f.get(

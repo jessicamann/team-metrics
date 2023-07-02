@@ -1,6 +1,6 @@
 import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import { existsSync } from "fs";
-import { showAsCalendar } from "../../../../forecasting";
+import { showAsCalendar } from "@app/forecasting";
 
 export default async function (f: FastifyInstance) {
   f.get(

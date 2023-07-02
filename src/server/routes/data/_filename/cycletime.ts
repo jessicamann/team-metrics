@@ -1,6 +1,6 @@
 import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import { existsSync } from "fs";
-import { showAsScatterChart } from "../../../../cycletime";
+import { showAsScatterChart } from "@app/cycletime";
 
 export default async function (f: FastifyInstance) {
   f.get(

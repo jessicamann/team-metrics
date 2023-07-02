@@ -1,5 +1,5 @@
 import { eachDayOfInterval, endOfDay, format, toDate } from "date-fns";
-import { percentiles } from "../common/math";
+import { percentiles } from "@app/common/math";
 import { runMonteCarlo } from "./montecarlo";
 import { readIntoForecastingData } from "./reader";
 

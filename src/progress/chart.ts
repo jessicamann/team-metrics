@@ -1,5 +1,5 @@
 import { map } from "lodash";
-import { blush, cyberYellow, emerald, gray } from "../colors";
+import { blush, cyberYellow, emerald, gray } from "@app/colors";
 import { countByStatus, groupByFeature } from "./calculate";
 import { readAsStoryData } from "./reader";
 import { Options, StoryData } from "./type";

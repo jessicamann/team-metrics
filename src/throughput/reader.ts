@@ -1,5 +1,5 @@
 import { map } from "lodash";
-import { readFromCsvAndDo } from "../common/csv";
+import { readFromCsvAndDo } from "@app/common/csv";
 import { GroupFn, StoryData, StoryDataList, ThroughputData } from "./type";
 
 /**

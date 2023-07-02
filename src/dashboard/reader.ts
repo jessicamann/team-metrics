@@ -1,6 +1,6 @@
 import { groupBy, some } from "lodash";
-import { readFromCsvAndDo } from "../common/csv";
-import { byWeek, readAsThroughput } from "../throughput";
+import { readFromCsvAndDo } from "@app/common/csv";
+import { byWeek, readAsThroughput } from "@app/throughput";
 import { isAfter, subMonths } from "date-fns";
 
 export type Forecastable = {

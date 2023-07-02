@@ -1,10 +1,13 @@
 import { writeFileSync } from "fs";
-import { buildServer } from "../../..";
+import { buildServer } from "@app/server";
 
 describe("GET /data/:filname/dashboard", () => {
   beforeAll(() => {
-    writeFileSync("./uploads/dashboard-test.csv", "id,startDate,endDate\nfoo,2023-01-01,2023-01-04")
-  })
+    writeFileSync(
+      "./uploads/dashboard-test.csv",
+      "id,startDate,endDate\nfoo,2023-01-01,2023-01-04",
+    );
+  });
   it("returns a 404 if a given file does not exist", async () => {
     const server = buildServer({ logger: false });
 

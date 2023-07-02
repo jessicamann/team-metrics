@@ -11,6 +11,9 @@
 
     "baseUrl": ".",
     "outDir": "dist",
+    "paths": {
+      "@app/*": ["src/*"]
+    },
 
     "strict": true,
     "esModuleInterop": true,

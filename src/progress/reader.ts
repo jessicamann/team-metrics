@@ -1,4 +1,4 @@
-import { readFromCsvAndDo } from "../common/csv";
+import { readFromCsvAndDo } from "@app/common/csv";
 import { Options, StoryData } from "./type";
 
 export async function readAsStoryData(

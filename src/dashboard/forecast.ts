@@ -1,7 +1,7 @@
 import { format } from "date-fns";
 import { compact, countBy, every, map, some } from "lodash";
-import { percentiles } from "../common/math";
-import { runMonteCarlo } from "../forecasting";
+import { percentiles } from "@app/common/math";
+import { runMonteCarlo } from "@app/forecasting";
 import { Forecastable, readIntoProgressAndForecastable } from "./reader";
 
 type Summary = {

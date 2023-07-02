@@ -1,5 +1,5 @@
-import { blueGreen, coral, emerald, freesia } from "../colors";
-import { percentiles } from "../common/math";
+import { blueGreen, coral, emerald, freesia } from "@app/colors";
+import { percentiles } from "@app/common/math";
 import { readAsCycleTiime } from "./reader";
 
 type CycleTime = number;

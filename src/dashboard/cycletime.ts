@@ -1,5 +1,5 @@
-import { percentiles } from "../common/math";
-import { readAsCycleTiime } from "../cycletime";
+import { percentiles } from "@app/common/math";
+import { readAsCycleTiime } from "@app/cycletime";
 import { toOutlyingItems } from "./toOutlyingItems";
 import { ItemId } from "./type";
 

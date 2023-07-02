@@ -1,4 +1,4 @@
-import { bluePurple, opal } from "../colors";
+import { bluePurple, opal } from "@app/colors";
 import { byWeek } from "./durations";
 import { readAsStory } from "./reader";
 
