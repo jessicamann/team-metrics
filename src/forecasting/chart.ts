@@ -1,5 +1,5 @@
-import { eachDayOfInterval, endOfDay, format, toDate } from "date-fns";
 import { percentiles } from "@app/common/math";
+import { eachDayOfInterval, endOfDay, format } from "date-fns";
 import { runMonteCarlo } from "./montecarlo";
 import { readIntoForecastingData } from "./reader";
 
@@ -38,8 +38,9 @@ export async function showAsCalendar(filepath: string): Promise<{
     [95]: p95,
     [100]: p100,
   } = percentiles(results, 20, 50, 85, 95, 100);
+  const firstPossibleCompletionDate = results[0];
   const _calendarData = [
-    ...toCalendarData(Date.now(), p20, 10),
+    ...toCalendarData(firstPossibleCompletionDate, p20, 10),
     ...toCalendarData(p20, p50, 35),
     ...toCalendarData(p50, p85, 60),
     ...toCalendarData(p85, p95, 90),
