@@ -1,4 +1,4 @@
-import { endOfWeek } from "date-fns";
+import { endOfWeek, format } from "date-fns";
 import { byWeek } from "./durations";
 
 describe("byWeek", () => {
@@ -14,9 +14,9 @@ describe("byWeek", () => {
     expect(result).toEqual({
       [firstWeek.toString()]: [
         { id: "1", completedAt: new Date("2023-02-04") },
-        { id: "2", completedAt: new Date("2023-02-05") },
       ],
       [secondWeek.toString()]: [
+        { id: "2", completedAt: new Date("2023-02-05") },
         { id: "3", completedAt: new Date("2023-02-06") },
       ],
     });
