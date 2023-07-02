@@ -1,6 +1,11 @@
+import { writeFileSync } from "fs";
 import { buildServer } from "../../..";
 
 describe("GET /data/:filname/forecast/", () => {
+  beforeAll(() => {
+    writeFileSync("./uploads/forecast-test.csv", "id,startDate,endDate\nfoo,2023-01-01,2023-01-04")
+  })
+
   it("returns a 404 if a given file does not exist", async () => {
     const server = buildServer({ logger: false });
 
