@@ -3,22 +3,25 @@ import { byWeek } from "./durations";
 
 describe("byWeek", () => {
   // NEED TO FIX THIS TEST - SOME TIMEZONE ISSUES...
-  xit("groups the stories completed in the same week", () => {
+  fit("groups the stories completed in the same week", () => {
+    const feb4 = new Date(2023, 1, 4);
+    const feb5 = new Date(2023, 1, 5);
+    const feb6 = new Date(2023, 1, 6);
+
     const result = byWeek([
-      { id: "1", completedAt: new Date("2023-02-04") }, // a saturday
-      { id: "2", completedAt: new Date("2023-02-05") }, // a sunday
-      { id: "3", completedAt: new Date("2023-02-06") }, // a monday
+      { id: "1", completedAt: feb4 }, // a saturday
+      { id: "2", completedAt: feb5 }, // a sunday
+      { id: "3", completedAt: feb6 }, // a monday
     ]);
 
-    const firstWeek = endOfWeek(new Date("2023-02-04"));
-    const secondWeek = endOfWeek(new Date("2023-02-06"));
+    const firstWeek = endOfWeek(feb4);
+    const secondWeek = endOfWeek(feb6);
+
     expect(result).toEqual({
-      [firstWeek.toString()]: [
-        { id: "1", completedAt: new Date("2023-02-04") },
-      ],
+      [firstWeek.toString()]: [{ id: "1", completedAt: feb4 }],
       [secondWeek.toString()]: [
-        { id: "2", completedAt: new Date("2023-02-05") },
-        { id: "3", completedAt: new Date("2023-02-06") },
+        { id: "2", completedAt: feb5 },
+        { id: "3", completedAt: feb6 },
       ],
     });
   });
