@@ -12,7 +12,7 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: "lts"
+          node-version: "latest"
       - run: npm ci
       - run: npm run build --if-present
       - run: npm test
