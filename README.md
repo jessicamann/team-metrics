@@ -1,5 +1,7 @@
 # Team Metrics
 
+[![Build, Test, Deploy](https://github.com/jessicamann/team-metrics/actions/workflows/deploy.yaml/badge.svg)](https://github.com/jessicamann/team-metrics/actions/workflows/deploy.yaml)
+
 Powerful metrics to lend insights into your team's value delivery process.
 
 ```zsh
