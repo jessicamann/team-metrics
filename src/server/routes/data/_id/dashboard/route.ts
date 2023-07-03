@@ -1,10 +1,10 @@
+import { TeamNotFoundError, getById } from "@app/common/repository";
 import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
-import { cycletimesSummary, forecastSummary } from "@app/dashboard";
-import { TeamNotFoundError } from "@app/common/repository";
+import { dashboardSummaries } from "./presentation";
 
 export default async function (f: FastifyInstance) {
   f.get(
-    "/dashboard",
+    "/",
     async (
       request: FastifyRequest<{
         Params: { id: string };
@@ -15,10 +15,11 @@ export default async function (f: FastifyInstance) {
       const id = request.params.id;
 
       try {
-        const [{ outliers, p25, p75, p85 }, summary] = await Promise.all([
-          cycletimesSummary(id),
-          forecastSummary(id, { onlyRecent: true }),
-        ]);
+        const {
+          outliers,
+          forecast,
+          cycletime: { p25, p75, p85 },
+        } = dashboardSummaries(getById(id), { onlyRecent: true });
 
         return reply.view("/templates/dashboard/index.ejs", {
           dataSet: id,
@@ -39,7 +40,7 @@ export default async function (f: FastifyInstance) {
             p25,
             p75,
           },
-          forecastedProgress: summary,
+          forecastedProgress: forecast,
         });
       } catch (e) {
         f.log.error(e);

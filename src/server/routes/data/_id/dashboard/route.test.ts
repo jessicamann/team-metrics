@@ -1,7 +1,8 @@
-import { TeamNotFoundError } from "@app/common/repository";
+import { TeamNotFoundError, getById } from "@app/common/repository";
 import { cycletimesSummary, forecastSummary } from "@app/dashboard";
 import { buildServer } from "@app/server";
 
+jest.mock("@app/common/repository");
 jest.mock("@app/dashboard", () => ({
   cycletimesSummary: jest.fn(),
   forecastSummary: jest.fn(),
@@ -9,9 +10,9 @@ jest.mock("@app/dashboard", () => ({
 
 describe("GET /data/:filname/dashboard", () => {
   it("returns a 404 if a given file does not exist", async () => {
-    (cycletimesSummary as jest.Mock).mockRejectedValueOnce(
-      new TeamNotFoundError(),
-    );
+    (getById as jest.Mock).mockImplementationOnce(() => {
+      throw new TeamNotFoundError();
+    });
     const server = buildServer({ logger: false });
 
     const response = await server.inject({
@@ -23,8 +24,8 @@ describe("GET /data/:filname/dashboard", () => {
   });
 
   it("returns a 200 with the the metrics home page for the uploaded file", async () => {
-    (cycletimesSummary as jest.Mock).mockResolvedValueOnce({ outliers: [] });
-    (forecastSummary as jest.Mock).mockResolvedValueOnce([]);
+    (cycletimesSummary as jest.Mock).mockReturnValueOnce({ outliers: [] });
+    (forecastSummary as jest.Mock).mockReturnValueOnce([]);
     const server = buildServer({ logger: false });
 
     const response = await server.inject({

@@ -1,4 +1,4 @@
 import { cycletimesSummary } from "./cycletime";
-import { forecastSummary } from "./forecast";
+import { Options, forecastSummary } from "./forecast";
 
-export { cycletimesSummary, forecastSummary };
+export { cycletimesSummary, forecastSummary, Options };

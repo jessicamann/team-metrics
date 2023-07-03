@@ -1,5 +1,5 @@
 import { percentiles } from "@app/common/math";
-import { getById } from "@app/common/repository";
+import { InputData, getById } from "@app/common/repository";
 import { runMonteCarlo } from "@app/forecasting";
 import { format } from "date-fns";
 import { compact, countBy, every, map } from "lodash";
@@ -18,7 +18,7 @@ type Summary = {
   };
 };
 
-type Options = {
+export type Options = {
   onlyRecent: boolean;
 };
 
@@ -26,11 +26,10 @@ function shouldSkip(items: Forecastable[]) {
   return every(items, (v) => !v.recentlyWorkedOn);
 }
 
-export async function forecastSummary(
-  id: string,
+export function forecastSummary(
+  data: InputData[],
   options: Options,
-): Promise<Summary[]> {
-  const data = getById(id);
+): Summary[] {
   const { throughput, forecastableByFeature } = intoForecastSummary(data);
 
   return compact(

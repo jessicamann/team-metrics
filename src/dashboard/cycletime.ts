@@ -1,8 +1,8 @@
 import { percentiles } from "@app/common/math";
+import { InputData } from "@app/common/repository";
+import { intoCycleTime } from "@app/cycletime";
 import { toOutlyingItems } from "./toOutlyingItems";
 import { ItemId } from "./type";
-import { getById } from "@app/common/repository";
-import { intoCycleTime } from "@app/cycletime";
 
 type Summary = {
   outliers: ItemId[];
@@ -11,8 +11,7 @@ type Summary = {
   p85: number;
 };
 
-export async function cycletimesSummary(id: string): Promise<Summary> {
-  const input = getById(id);
+export function cycletimesSummary(input: InputData[]): Summary {
   const cycleTimeData = intoCycleTime(input);
   const outliers = toOutlyingItems(cycleTimeData);
   const times = cycleTimeData.map((d) => d.cycletime);
