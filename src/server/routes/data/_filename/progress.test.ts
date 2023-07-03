@@ -1,20 +1,12 @@
 import { TeamNotFoundError } from "@app/common/repository";
 import { showAsDonutChartsByFeature } from "@app/progress";
 import { buildServer } from "@app/server";
-import { writeFileSync } from "fs";
 
 jest.mock("@app/progress", () => ({
   showAsDonutChartsByFeature: jest.fn(),
 }));
 
 describe("GET /data/:filname/progress", () => {
-  beforeAll(() => {
-    writeFileSync(
-      "./uploads/progress-test.csv",
-      "id,startDate,endDate,feature\nfoo,2023-01-01,2023-01-04,FeatureB",
-    );
-  });
-
   it("returns a 404 if a given file does not exist", async () => {
     (showAsDonutChartsByFeature as jest.Mock).mockRejectedValueOnce(
       new TeamNotFoundError(),

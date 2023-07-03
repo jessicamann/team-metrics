@@ -1,20 +1,12 @@
 import { TeamNotFoundError } from "@app/common/repository";
 import { buildServer } from "@app/server";
 import { showAsLineChart } from "@app/throughput";
-import { writeFileSync } from "fs";
 
 jest.mock("@app/throughput", () => ({
   showAsLineChart: jest.fn(),
 }));
 
 describe("GET /data/:filname/throughput", () => {
-  beforeAll(() => {
-    writeFileSync(
-      "./uploads/throughput-test.csv",
-      "id,startDate,endDate\nfoo,2023-01-01,2023-01-04",
-    );
-  });
-
   it("returns a 404 if a given file does not exist", async () => {
     (showAsLineChart as jest.Mock).mockRejectedValueOnce(
       new TeamNotFoundError(),

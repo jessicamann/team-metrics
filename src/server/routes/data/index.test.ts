@@ -16,7 +16,7 @@ describe("POST /data", () => {
     expect(response.statusCode).toEqual(406);
   });
 
-  it("retruns 201 if file was uploaded successfully", async () => {
+  it("redirects user to the team home page if file was uploaded successfully", async () => {
     const server = buildServer({ logger: false });
 
     const form = formAutoContent({
