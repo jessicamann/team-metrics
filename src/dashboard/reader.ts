@@ -28,7 +28,7 @@ function intoForecast(data: InputData[]): Forecastable[] {
 
 export function intoForecastSummary(data: InputData[]) {
   const throughput = intoThroughput(data)
-    .toThroughput(byWeek)
+    .count(byWeek)
     .map((d) => d.total);
   const forecast = groupBy(intoForecast(data), "feature");
 

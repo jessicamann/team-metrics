@@ -7,7 +7,7 @@ export type StoryData = {
 
 export interface StoryDataList {
   stories: StoryData[];
-  toThroughput: (fn: GroupFn) => ThroughputData[];
+  count: (fn: GroupFn) => ThroughputData[];
 }
 
 export type ThroughputData = {

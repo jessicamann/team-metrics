@@ -8,7 +8,7 @@ type ForecastingData = {
 
 export function intoForecastData(data: InputData[]): ForecastingData {
   const throughput = intoThroughput(data)
-    .toThroughput(byWeek)
+    .count(byWeek)
     .map((d) => d.total);
   const remaining = data.filter((d) => !d.endDate).length;
 

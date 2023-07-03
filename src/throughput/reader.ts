@@ -5,7 +5,7 @@ import { GroupFn, StoryData, StoryDataList, ThroughputData } from "./type";
 /**
  * @internal
  */
-export function toThroughput(
+export function countOfStories(
   data: StoryData[],
   byDuration: GroupFn,
 ): ThroughputData[] {
@@ -27,6 +27,6 @@ export function intoThroughput(data: InputData[]): StoryDataList {
 
   return {
     stories,
-    toThroughput: (fn: GroupFn) => toThroughput(stories, fn),
+    count: (fn: GroupFn) => countOfStories(stories, fn),
   };
 }

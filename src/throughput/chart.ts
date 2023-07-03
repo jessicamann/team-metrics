@@ -5,7 +5,7 @@ import { intoThroughput } from "./reader";
 
 export async function showAsLineChart(id: string) {
   const throughput = intoThroughput(getById(id))
-    .toThroughput(byWeek)
+    .count(byWeek)
     .sort((a, b) => a.periodEnd.getTime() - b.periodEnd.getTime());
 
   return {
