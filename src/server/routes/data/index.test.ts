@@ -4,6 +4,10 @@ import formAutoContent from "form-auto-content";
 import { createReadStream, existsSync, mkdirSync, writeFileSync } from "fs";
 import { buildServer } from "@app/server";
 
+jest.mock("randomstring", () => ({
+  generate: () => "test-id",
+}));
+
 beforeAll(() => {
   if (existsSync("./uploads")) return;
   mkdirSync("./uploads");
@@ -35,8 +39,8 @@ describe("POST /data", () => {
     });
 
     expect(response.statusCode).toEqual(303);
-    expect(response.headers.location).toEqual("/data/test-file");
-    expect(existsSync("./uploads/test-file.json")).toBeTruthy();
+    expect(response.headers.location).toEqual("/data/test-id");
+    expect(existsSync("./uploads/test-id.json")).toBeTruthy();
   });
 });
 

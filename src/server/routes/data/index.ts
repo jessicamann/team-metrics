@@ -1,23 +1,18 @@
 import csv from "csvtojson";
+import { generate } from "randomstring";
 import { MultipartFile } from "@fastify/multipart";
 import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import { existsSync, writeFileSync } from "fs";
 
 export default async function (f: FastifyInstance) {
   f.post("/", async (request: FastifyRequest, reply: FastifyReply) => {
-    const { file, filename } = (await request.file()) as MultipartFile;
-    const trimmedFileName = filename.replace(".csv", "");
+    const { file } = (await request.file()) as MultipartFile;
+    const id = generate(5);
 
     const asJson = (await csv().fromStream(file)) as any[];
-    writeFileSync(
-      `./uploads/${filename.replace(".csv", ".json")}`,
-      JSON.stringify(asJson),
-    );
+    writeFileSync(`./uploads/${id}.json`, JSON.stringify(asJson));
 
-    return reply
-      .code(303)
-      .header("location", `/data/${trimmedFileName}`)
-      .send();
+    return reply.code(303).header("location", `/data/${id}`).send();
   });
 
   f.get(
