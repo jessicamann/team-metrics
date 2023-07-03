@@ -1,4 +1,7 @@
-import { existsSync } from "fs";
+import csv from "csvtojson";
+import { generate } from "randomstring";
+import { existsSync, writeFileSync } from "fs";
+import { Readable } from "stream";
 
 export type InputData = {
   id: string;
@@ -20,4 +23,13 @@ export function getById(id: string): InputData[] {
 
 export function existsById(id: string): boolean {
   return existsSync(`./uploads/${id}.json`);
+}
+
+export async function save(stream: Readable): Promise<string> {
+  const content = await csv().fromStream(stream);
+
+  const id = generate(5);
+  writeFileSync(`./uploads/${id}.json`, JSON.stringify(content));
+
+  return id;
 }

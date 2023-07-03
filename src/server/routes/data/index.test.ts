@@ -3,19 +3,11 @@
 import formAutoContent from "form-auto-content";
 import { createReadStream, existsSync, mkdirSync, writeFileSync } from "fs";
 import { buildServer } from "@app/server";
-import { existsById } from "@app/common/repository";
+import { existsById, save } from "@app/common/repository";
 
 jest.mock("@app/common/repository");
-jest.mock("randomstring", () => ({
-  generate: () => "test-id",
-}));
 
 describe("POST /data", () => {
-  beforeAll(() => {
-    if (existsSync("./uploads")) return;
-    mkdirSync("./uploads");
-  });
-
   it("returns 406 if no file was provided", async () => {
     const server = buildServer({ logger: false });
 
@@ -28,6 +20,7 @@ describe("POST /data", () => {
   });
 
   it("redirects user to the team home page if file was uploaded successfully", async () => {
+    (save as jest.Mock).mockResolvedValueOnce("test-id");
     const server = buildServer({ logger: false });
 
     const form = formAutoContent({
@@ -42,7 +35,6 @@ describe("POST /data", () => {
 
     expect(response.statusCode).toEqual(303);
     expect(response.headers.location).toEqual("/data/test-id");
-    expect(existsSync("./uploads/test-id.json")).toBeTruthy();
   });
 });
 
