@@ -1,0 +1,45 @@
+{
+  "parser": "@typescript-eslint/parser",
+  "extends": [
+    "plugin:@typescript-eslint/recommended",
+    "plugin:prettier/recommended"
+  ],
+  "plugins": ["@typescript-eslint", "prettier"],
+  "rules": {
+    "prettier/prettier": "error",
+    "no-restricted-imports": "off",
+    "@typescript-eslint/no-restricted-imports": [
+      "error",
+      {
+        "patterns": [
+          {
+            "group": [
+              "@app/throughput/*",
+              "!@app/throughput/api",
+              "!@app/throughput/type",
+              "@app/cycletime/*",
+              "!@app/cycletime/api",
+              "!@app/cycletime/types",
+              "@app/forecasting/*",
+              "!@app/forecasting/api",
+              "!@app/forecasting/type",
+              "@app/progress/*",
+              "!@app/progress/api",
+              "!@app/progress/type"
+            ],
+            "message": "Only methods in api & type are allowed cross module access"
+          }
+        ]
+      }
+    ]
+  },
+  "overrides": [
+    {
+      "files": ["**/*test.ts"],
+      "rules": {
+        "@typescript-eslint/no-empty-function": "off",
+        "@typescript-eslint/no-var-requires": "off"
+      }
+    }
+  ]
+}

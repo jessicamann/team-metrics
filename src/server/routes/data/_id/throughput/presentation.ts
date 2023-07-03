@@ -1,7 +1,7 @@
 import { bluePurple, opal } from "@app/colors";
 import { ThroughputData } from "@app/throughput/type";
 
-export function showAsLineChart(data: ThroughputData[]): any {
+export function showAsLineChart(data: ThroughputData[]) {
   data.sort((a, b) => a.periodEnd.getTime() - b.periodEnd.getTime());
 
   return {

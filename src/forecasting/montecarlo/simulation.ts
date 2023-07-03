@@ -1,4 +1,4 @@
-import { addDays, addWeeks } from "date-fns";
+import { addWeeks } from "date-fns";
 import { CompletedDate } from "./type";
 
 type StoryCount = number;

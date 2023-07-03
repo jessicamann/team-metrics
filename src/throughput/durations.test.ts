@@ -1,4 +1,4 @@
-import { endOfWeek, format } from "date-fns";
+import { endOfWeek } from "date-fns";
 import { byWeek } from "./durations";
 
 describe("byWeek", () => {

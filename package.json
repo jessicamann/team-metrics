@@ -14,31 +14,6 @@
     "*": "prettier --write",
     "*.ts": "eslint --fix"
   },
-  "eslintConfig": {
-    "parser": "@typescript-eslint/parser",
-    "extends": [
-      "plugin:@typescript-eslint/recommended",
-      "plugin:prettier/recommended"
-    ],
-    "plugins": [
-      "@typescript-eslint",
-      "prettier"
-    ],
-    "rules": {
-      "prettier/prettier": "error"
-    },
-    "overrides": [
-      {
-        "files": [
-          "**/*test.ts"
-        ],
-        "rules": {
-          "@typescript-eslint/no-empty-function": "off",
-          "@typescript-eslint/no-var-requires": "off"
-        }
-      }
-    ]
-  },
   "jest": {
     "preset": "ts-jest",
     "testEnvironment": "node",

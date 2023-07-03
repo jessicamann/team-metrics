@@ -1,7 +1,7 @@
 import { TeamNotFoundError, getById } from "@app/common/repository";
+import { Duration, intoThroughput } from "@app/throughput/api";
 import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import { showAsLineChart } from "./presentation";
-import { Duration, intoThroughput } from "@app/throughput/api";
 
 export default async function (f: FastifyInstance) {
   f.get(

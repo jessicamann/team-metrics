@@ -1,9 +1,9 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore: this library is not type friendly
 import formAutoContent from "form-auto-content";
-import { createReadStream, existsSync, mkdirSync, writeFileSync } from "fs";
-import { buildServer } from "@app/server";
 import { existsById, save } from "@app/common/repository";
+import { buildServer } from "@app/server";
+import { createReadStream } from "fs";
 
 jest.mock("@app/common/repository");
 
