@@ -4,9 +4,19 @@ import fastifyView from "@fastify/view";
 import fastifyAutoload from "@fastify/autoload";
 import fastifyMultipart from "@fastify/multipart";
 
+const loggerconfig = () => ({
+  transport: {
+    target: "pino-pretty",
+    options: {
+      translateTime: "HH:MM:ss Z",
+      ignore: "pid,hostname",
+    },
+  },
+});
+
 export function buildServer({ logger = true } = {}) {
   const fastify = Fastify({
-    logger: logger,
+    logger: logger ? loggerconfig() : false,
   });
 
   fastify.register(fastifyView, {
