@@ -2,8 +2,7 @@ import { endOfWeek, format } from "date-fns";
 import { byWeek } from "./durations";
 
 describe("byWeek", () => {
-  // NEED TO FIX THIS TEST - SOME TIMEZONE ISSUES...
-  fit("groups the stories completed in the same week", () => {
+  it("groups the stories completed in the same week", () => {
     const feb4 = new Date(2023, 1, 4);
     const feb5 = new Date(2023, 1, 5);
     const feb6 = new Date(2023, 1, 6);
