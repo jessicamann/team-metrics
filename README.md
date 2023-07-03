@@ -23,3 +23,12 @@ The file format expects a csv file with the following headers:
 | ------- | ---------- | ---------- | --------------- |
 | STORY-1 | 2022-01-25 | 2022-01-31 | 1-click signup  |
 | STORY-1 | 2022-03-25 | 2022-04-02 | Another Feature |
+
+# up next
+
+- (refactor) chart presentation closer to routes
+- (quality) missing tests...
+- deploy
+- import from jira...?
+- data store
+- share with others
