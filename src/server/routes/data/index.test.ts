@@ -1,8 +1,13 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore: this library is not type friendly
 import formAutoContent from "form-auto-content";
-import { createReadStream, existsSync, writeFileSync } from "fs";
+import { createReadStream, existsSync, mkdirSync, writeFileSync } from "fs";
 import { buildServer } from "@app/server";
+
+beforeAll(() => {
+  if (existsSync("./uploads")) return;
+  mkdirSync("./uploads");
+});
 
 describe("POST /data", () => {
   it("returns 406 if no file was provided", async () => {
