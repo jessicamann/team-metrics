@@ -1,7 +1,7 @@
 import { InputData } from "@app/common/repository";
 import { byWeek, intoThroughput } from "@app/throughput";
 
-type ForecastingData = {
+export type ForecastingData = {
   remaining: number;
   throughput: number[];
 };
