@@ -26,7 +26,6 @@ The file format expects a csv file with the following headers:
 
 # up next
 
-- (refactor) chart presentation closer to routes
 - (quality) missing tests...
 - deploy
 - import from jira...?

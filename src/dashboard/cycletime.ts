@@ -1,7 +1,7 @@
 import { percentiles } from "@app/common/math";
 import { InputData } from "@app/common/repository";
 import { intoCycleTime } from "@app/cycletime";
-import { toOutlyingItems } from "./toOutlyingItems";
+import { toOutlyingItems } from "./outliers";
 import { ItemId } from "./type";
 
 type Summary = {

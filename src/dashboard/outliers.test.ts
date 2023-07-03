@@ -1,5 +1,5 @@
 import { subDays } from "date-fns";
-import { toOutlyingItems } from "./toOutlyingItems";
+import { toOutlyingItems } from "./outliers";
 
 it("returns empty list if cycle time data is empty", () => {
   const actual = toOutlyingItems([]);
