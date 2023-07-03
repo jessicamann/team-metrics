@@ -1,5 +1,5 @@
 import { TeamNotFoundError, getById } from "@app/common/repository";
-import { intoCycleTime } from "@app/cycletime";
+import { toCycleTime } from "@app/cycletime/api";
 import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import { showAsScatterChart } from "./presentation";
 
@@ -13,7 +13,7 @@ export default async function (f: FastifyInstance) {
       const id = request.params.id;
 
       try {
-        const data = intoCycleTime(getById(id));
+        const data = toCycleTime(getById(id));
         const { chart, p50, p85, p95 } = showAsScatterChart(data);
         reply.view("/templates/cycletime/index.ejs", {
           dataSet: id,

@@ -1,8 +1,8 @@
 import { percentiles } from "@app/common/math";
 import { InputData } from "@app/common/repository";
-import { intoCycleTime } from "@app/cycletime";
 import { toOutlyingItems } from "./outliers";
 import { ItemId } from "./type";
+import { toCycleTime } from "@app/cycletime/api";
 
 type Summary = {
   outliers: ItemId[];
@@ -12,7 +12,7 @@ type Summary = {
 };
 
 export function cycletimesSummary(input: InputData[]): Summary {
-  const cycleTimeData = intoCycleTime(input);
+  const cycleTimeData = toCycleTime(input);
   const outliers = toOutlyingItems(cycleTimeData);
   const times = cycleTimeData.map((d) => d.cycletime);
   const { [25]: p25, [75]: p75, [85]: p85 } = percentiles(times, 25, 75, 85);

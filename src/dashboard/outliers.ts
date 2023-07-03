@@ -1,6 +1,6 @@
 import { isAfter, subMonths } from "date-fns";
 import percentile from "percentile";
-import { CycleTime } from "@app/cycletime";
+import { CycleTime } from "@app/cycletime/types";
 import { ItemId } from "./type";
 
 /**

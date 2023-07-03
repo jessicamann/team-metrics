@@ -10,18 +10,14 @@ export function cycletimeBetween(end: Date, start: Date): number {
   return days;
 }
 
-function isComplete(d: InputData) {
+export function isComplete(d: InputData) {
   return d.startDate && d.endDate;
 }
 
-function toCycleTime(d: InputData): CycleTime {
+export function asCycleTime(d: InputData): CycleTime {
   return {
     id: d.id,
     completedAt: new Date(d.endDate),
     cycletime: cycletimeBetween(new Date(d.endDate), new Date(d.startDate)),
   };
-}
-
-export function intoCycleTime(data: InputData[]): CycleTime[] {
-  return data.filter(isComplete).map(toCycleTime);
 }

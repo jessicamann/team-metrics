@@ -1,6 +1,6 @@
 import { blueGreen, coral, emerald, freesia } from "@app/colors";
 import { percentiles } from "@app/common/math";
-import { CycleTime } from "@app/cycletime";
+import { CycleTime } from "@app/cycletime/types";
 
 type Point = {
   x: Date;

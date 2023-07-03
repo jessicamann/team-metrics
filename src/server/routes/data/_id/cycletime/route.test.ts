@@ -1,10 +1,10 @@
 import { TeamNotFoundError, getById } from "@app/common/repository";
 import { buildServer } from "@app/server";
 
-const mockIntoCycleTime = jest.fn();
+const mockToCycleTime = jest.fn();
 jest.mock("@app/common/repository");
-jest.mock("@app/cycletime", () => ({
-  intoCycleTime: mockIntoCycleTime,
+jest.mock("@app/cycletime/api", () => ({
+  toCycleTime: mockToCycleTime,
 }));
 
 describe("GET /data/:id/cycletime", () => {
@@ -23,7 +23,7 @@ describe("GET /data/:id/cycletime", () => {
   });
 
   it("returns a 200 with the cycletime page", async () => {
-    mockIntoCycleTime.mockReturnValueOnce([
+    mockToCycleTime.mockReturnValueOnce([
       {
         id: "1",
         completedAt: new Date(),
