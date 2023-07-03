@@ -1,8 +1,8 @@
-import { byWeek } from "./durations";
-import { showAsLineChart } from "./chart";
-import { readAsStory, intoThroughput } from "./reader";
-import { ThroughputData } from "./type";
 import { getById } from "@app/common/repository";
+import { showAsLineChart } from "./chart";
+import { byWeek } from "./durations";
+import { intoThroughput } from "./reader";
+import { ThroughputData } from "./type";
 
 async function toWeeklyThroughput(id: string): Promise<ThroughputData[]> {
   const data = intoThroughput(getById(id));
@@ -11,10 +11,4 @@ async function toWeeklyThroughput(id: string): Promise<ThroughputData[]> {
     .sort((a, b) => a.periodEnd.getTime() - b.periodEnd.getTime());
 }
 
-export {
-  byWeek,
-  showAsLineChart,
-  toWeeklyThroughput,
-  readAsStory as readAsThroughput,
-  intoThroughput,
-};
+export { byWeek, intoThroughput, showAsLineChart, toWeeklyThroughput };
