@@ -1,5 +1,5 @@
 import { countOfStories, intoThroughput } from "./reader";
-import { GroupFn, StoryData } from "./type";
+import { GroupFn } from "./type";
 
 describe("intoThroughput", () => {
   it("skips stories which have not been completed", () => {

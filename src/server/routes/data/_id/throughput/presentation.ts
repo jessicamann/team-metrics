@@ -1,12 +1,8 @@
 import { bluePurple, opal } from "@app/colors";
-import { getById } from "@app/common/repository";
-import { byWeek } from "./durations";
-import { intoThroughput } from "./reader";
+import { ThroughputData } from "@app/throughput";
 
-export async function showAsLineChart(id: string) {
-  const throughput = intoThroughput(getById(id))
-    .count(byWeek)
-    .sort((a, b) => a.periodEnd.getTime() - b.periodEnd.getTime());
+export function showAsLineChart(data: ThroughputData[]): any {
+  data.sort((a, b) => a.periodEnd.getTime() - b.periodEnd.getTime());
 
   return {
     type: "line",
@@ -14,7 +10,7 @@ export async function showAsLineChart(id: string) {
       datasets: [
         {
           label: "count",
-          data: throughput.map((d) => ({ x: d.periodEnd, y: d.total })),
+          data: data.map((d) => ({ x: d.periodEnd, y: d.total })),
           fill: false,
           borderColor: bluePurple,
           backgroundColor: bluePurple,

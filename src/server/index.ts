@@ -20,6 +20,7 @@ export function buildServer({ logger = true } = {}) {
   fastify.register(fastifyAutoload, {
     dir: path.join(__dirname, "routes"),
     routeParams: true,
+    maxDepth: 3, // default is 2
     ignorePattern: /.*(test).ts/,
     logLevel: "debug",
   });

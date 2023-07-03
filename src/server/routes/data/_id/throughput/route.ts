@@ -1,10 +1,11 @@
-import { TeamNotFoundError } from "@app/common/repository";
-import { showAsLineChart } from "@app/throughput";
+import { TeamNotFoundError, getById } from "@app/common/repository";
 import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
+import { showAsLineChart } from "./presentation";
+import { byWeek, intoThroughput } from "@app/throughput";
 
 export default async function (f: FastifyInstance) {
   f.get(
-    "/throughput",
+    "/",
     async (
       request: FastifyRequest<{ Params: { id: string } }>,
       reply: FastifyReply,
@@ -12,7 +13,8 @@ export default async function (f: FastifyInstance) {
       const id = request.params.id;
 
       try {
-        const chart = await showAsLineChart(id);
+        const data = intoThroughput(getById(id)).count(byWeek);
+        const chart = showAsLineChart(data);
         return reply.view("/templates/throughput/index.ejs", {
           dataSet: id,
           throughput: chart,

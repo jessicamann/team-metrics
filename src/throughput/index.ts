@@ -1,5 +1,5 @@
-import { showAsLineChart } from "./chart";
 import { byWeek } from "./durations";
 import { intoThroughput } from "./reader";
+import { ThroughputData } from "./type";
 
-export { byWeek, intoThroughput, showAsLineChart };
+export { byWeek, intoThroughput, ThroughputData };
