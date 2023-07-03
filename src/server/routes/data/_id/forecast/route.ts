@@ -1,7 +1,7 @@
 import { TeamNotFoundError, getById } from "@app/common/repository";
-import { runMonteCarlo, intoForecastData } from "@app/forecasting";
 import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import { showAsCalendar } from "./presentation";
+import { forecast } from "@app/forecasting/api";
 
 export default async function (f: FastifyInstance) {
   f.get(
@@ -16,8 +16,8 @@ export default async function (f: FastifyInstance) {
       const id = request.params.id;
 
       try {
-        const { throughput, remaining } = intoForecastData(getById(id));
-        const dates = runMonteCarlo(20000, remaining, throughput);
+        const { remaining, simulate } = forecast(getById(id));
+        const dates = simulate();
 
         const { calendarData, confidence } = showAsCalendar(dates);
         reply.view("/templates/forecasts/index.ejs", {

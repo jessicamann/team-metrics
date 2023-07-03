@@ -1,12 +1,10 @@
 import { TeamNotFoundError, getById } from "@app/common/repository";
 import { buildServer } from "@app/server";
 
-const mockIntoForecastingData = jest.fn();
-const mockRunMonteCarlo = jest.fn();
+const mockForecast = jest.fn();
 jest.mock("@app/common/repository");
-jest.mock("@app/forecasting", () => ({
-  intoForecastData: mockIntoForecastingData,
-  runMonteCarlo: mockRunMonteCarlo,
+jest.mock("@app/forecasting/api", () => ({
+  forecast: mockForecast,
 }));
 
 describe("GET /data/:filname/forecast/", () => {
@@ -25,11 +23,10 @@ describe("GET /data/:filname/forecast/", () => {
   });
 
   it("returns a 200 with the forecast page", async () => {
-    mockIntoForecastingData.mockReturnValueOnce({
-      throughput: 1,
-      remaining: 1,
+    mockForecast.mockReturnValueOnce({
+      remaining: 3,
+      simulate: () => [1, 2, 3],
     });
-    mockRunMonteCarlo.mockReturnValueOnce([1, 2, 3]);
 
     const server = buildServer({ logger: false });
 

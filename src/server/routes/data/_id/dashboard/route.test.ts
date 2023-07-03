@@ -1,10 +1,13 @@
 import { TeamNotFoundError, getById } from "@app/common/repository";
-import { cycletimesSummary, forecastSummary } from "@app/dashboard";
+import { cycletimesSummary } from "@app/dashboard/cycletime";
+import { forecastSummary } from "@app/dashboard/forecast";
 import { buildServer } from "@app/server";
 
 jest.mock("@app/common/repository");
-jest.mock("@app/dashboard", () => ({
+jest.mock("@app/dashboard/cycletime", () => ({
   cycletimesSummary: jest.fn(),
+}));
+jest.mock("@app/dashboard/forecast", () => ({
   forecastSummary: jest.fn(),
 }));
 

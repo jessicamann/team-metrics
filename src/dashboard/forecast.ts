@@ -1,9 +1,9 @@
+import { format, isAfter, subMonths } from "date-fns";
+import { chain, some } from "lodash";
 import { percentiles } from "@app/common/math";
 import { InputData } from "@app/common/repository";
-import { runMonteCarlo } from "@app/forecasting";
-import { format, isAfter, subMonths } from "date-fns";
-import { chain, compact, countBy, every, groupBy, map, some } from "lodash";
-import { byWeek, intoThroughput } from "@app/throughput";
+import { forecast } from "@app/forecasting/api";
+import { Options } from "./type";
 
 type Summary = {
   name: string;
@@ -18,51 +18,29 @@ type Summary = {
   };
 };
 
-export type Options = {
-  onlyRecent: boolean;
-};
-
-export type Forecastable = {
-  id: string;
-  completed: boolean;
-  feature: string;
-  recentlyWorkedOn: boolean;
-};
-
-function isNotRecent(items: Forecastable[]) {
-  return every(items, (v) => !v.recentlyWorkedOn);
-}
-
-function datesAreRecent(...dates: string[]) {
+function isRecent(data: InputData[]): boolean {
   const oneMonthAgo = subMonths(new Date(), 1);
-  return some(dates, (d) => isAfter(new Date(d), oneMonthAgo));
+  return some(
+    data,
+    (d) =>
+      isAfter(new Date(d.endDate), oneMonthAgo) ||
+      isAfter(new Date(d.startDate), oneMonthAgo),
+  );
 }
 
-function fromInput(data: InputData[]): Forecastable[] {
-  return data
-    .filter((d) => d.feature)
-    .map((d) => ({
-      id: d.id,
-      completed: !!d.endDate,
-      feature: d.feature,
-      recentlyWorkedOn: datesAreRecent(d.startDate, d.endDate),
-    }));
+function withFeature(data: InputData[]): InputData[] {
+  return data.filter((d) => d.feature);
 }
 
-function forecast(remaining: number, throughput: number[]) {
-  const simulations = runMonteCarlo(20000, remaining, throughput);
-  return percentiles(simulations, 50, 85, 95);
-}
-
-function toFeatureSummary(options: Options, throughput: number[]) {
-  return function (value: Forecastable[], featureName: string) {
-    if (options.onlyRecent && isNotRecent(value)) {
+function toFeatureSummary(options: Options) {
+  return function (value: InputData[], featureName: string) {
+    if (options.onlyRecent && !isRecent(value)) {
       return;
     }
 
-    const completed = countBy(value, "completed")["true"];
-    const incomplete = countBy(value, "completed")["false"];
-    const forecastConfidence = forecast(incomplete, throughput);
+    const completed = value.filter((d) => d.endDate).length;
+    const dates = forecast(value).simulate();
+    const forecastConfidence = percentiles(dates, 50, 85, 95);
 
     return {
       name: featureName,
@@ -83,13 +61,9 @@ export function forecastSummary(
   data: InputData[],
   options: Options,
 ): Summary[] {
-  const throughput = intoThroughput(data)
-    .count(byWeek)
-    .map((d) => d.total);
-
-  return chain(fromInput(data))
+  return chain(withFeature(data))
     .groupBy("feature")
-    .map(toFeatureSummary(options, throughput))
+    .map(toFeatureSummary(options))
     .compact()
     .value();
 }
