@@ -1,16 +1,17 @@
-import { TeamNotFoundError } from "@app/common/repository";
-import { showAsScatterChart } from "@app/cycletime";
+import { TeamNotFoundError, getById } from "@app/common/repository";
 import { buildServer } from "@app/server";
 
+const mockIntoCycleTime = jest.fn();
+jest.mock("@app/common/repository");
 jest.mock("@app/cycletime", () => ({
-  showAsScatterChart: jest.fn(),
+  intoCycleTime: mockIntoCycleTime,
 }));
 
-describe("GET /data/:filname/cycletime", () => {
+describe("GET /data/:id/cycletime", () => {
   it("returns a 404 if a given file does not exist", async () => {
-    (showAsScatterChart as jest.Mock).mockRejectedValueOnce(
-      new TeamNotFoundError(),
-    );
+    (getById as jest.Mock).mockImplementationOnce(() => {
+      throw new TeamNotFoundError();
+    });
     const server = buildServer({ logger: false });
 
     const response = await server.inject({
@@ -21,8 +22,14 @@ describe("GET /data/:filname/cycletime", () => {
     expect(response.statusCode).toEqual(404);
   });
 
-  it("returns a 200 with the the metrics home page for the uploaded file", async () => {
-    (showAsScatterChart as jest.Mock).mockResolvedValueOnce({});
+  it("returns a 200 with the cycletime page", async () => {
+    mockIntoCycleTime.mockReturnValueOnce([
+      {
+        id: "1",
+        completedAt: new Date(),
+        cycletime: 2,
+      },
+    ]);
     const server = buildServer({ logger: false });
 
     const response = await server.inject({

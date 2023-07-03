@@ -1,12 +1,10 @@
 import { blueGreen, coral, emerald, freesia } from "@app/colors";
 import { percentiles } from "@app/common/math";
-import { intoCycleTime } from "./reader";
-import { getById } from "@app/common/repository";
+import { CycleTime } from "@app/cycletime";
 
-type CycleTime = number;
 type Point = {
   x: Date;
-  y: CycleTime;
+  y: number;
 };
 
 function edgeXAxis(data: Point[]) {
@@ -39,11 +37,8 @@ function toPLine(
   };
 }
 
-export async function showAsScatterChart(id: string) {
-  const input = getById(id);
-  const _data = intoCycleTime(input);
-
-  const data: Point[] = _data.map((story) => ({
+export function showAsScatterChart(_data: CycleTime[]) {
+  const data: Point[] = _data.map((story: CycleTime) => ({
     x: story.completedAt,
     y: story.cycletime,
     id: story.id,

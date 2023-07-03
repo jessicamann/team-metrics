@@ -2,7 +2,7 @@ import { percentiles } from "@app/common/math";
 import { toOutlyingItems } from "./toOutlyingItems";
 import { ItemId } from "./type";
 import { getById } from "@app/common/repository";
-import { intoCycleTime } from "@app/cycletime/reader";
+import { intoCycleTime } from "@app/cycletime";
 
 type Summary = {
   outliers: ItemId[];
