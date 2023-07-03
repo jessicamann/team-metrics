@@ -5,7 +5,7 @@
   "main": "dist/index.js",
   "scripts": {
     "clean": "rm -rf dist/",
-    "build": "npm run clean && tsc && tsc-alias",
+    "build": "npm run clean && tsc -p ./tsconfig.build.json && tsc-alias",
     "test": "jest --verbose",
     "start": "node dist/index.js",
     "dev": "nodemon -r tsconfig-paths/register src/index.ts"

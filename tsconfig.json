@@ -22,6 +22,5 @@
     "noImplicitAny": true
   },
 
-  "include": ["src/**/*"],
-  "exclude": ["**/*.test.ts", "src/server/routes/fixtures/*", "**/__mocks__/*"]
+  "include": ["src/**/*"]
 }
