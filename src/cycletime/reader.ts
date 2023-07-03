@@ -1,5 +1,5 @@
+import { InputData } from "@app/common/repository";
 import { differenceInCalendarDays } from "date-fns";
-import { readFromCsvAndDo } from "@app/common/csv";
 import { CycleTime } from "./types";
 
 export function cycletimeBetween(end: Date, start: Date): number {
@@ -10,18 +10,18 @@ export function cycletimeBetween(end: Date, start: Date): number {
   return days;
 }
 
-export function readAsCycleTiime(filepath: string): Promise<CycleTime[]> {
-  return readFromCsvAndDo<CycleTime>(filepath, (row, skip) => {
-    const { id, endDate, startDate } = row as {
-      id: string;
-      endDate: string;
-      startDate: string;
-    };
-    if (!endDate || !startDate) {
-      skip();
-    }
+function isComplete(d: InputData) {
+  return d.startDate && d.endDate;
+}
 
-    const cycleTime = cycletimeBetween(new Date(endDate), new Date(startDate));
-    return { id, completedAt: new Date(endDate), cycletime: cycleTime };
-  });
+function toCycleTime(d: InputData): CycleTime {
+  return {
+    id: d.id,
+    completedAt: new Date(d.endDate),
+    cycletime: cycletimeBetween(new Date(d.endDate), new Date(d.startDate)),
+  };
+}
+
+export function intoCycleTime(data: InputData[]): CycleTime[] {
+  return data.filter(isComplete).map(toCycleTime);
 }

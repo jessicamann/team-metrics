@@ -3,7 +3,7 @@
  */
 
 import { showAsScatterChart } from "./chart";
-import { readAsCycleTiime } from "./reader";
+import { intoCycleTime } from "./reader";
 import { CycleTime } from "./types";
 
-export { CycleTime, readAsCycleTiime, showAsScatterChart };
+export { CycleTime, intoCycleTime as readAsCycleTime, showAsScatterChart };

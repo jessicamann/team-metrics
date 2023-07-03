@@ -1,15 +1,16 @@
-import { writeFileSync } from "fs";
+import { TeamNotFoundError } from "@app/common/repository";
+import { showAsCalendar } from "@app/forecasting";
 import { buildServer } from "@app/server";
 
-describe("GET /data/:filname/forecast/", () => {
-  beforeAll(() => {
-    writeFileSync(
-      "./uploads/forecast-test.csv",
-      "id,startDate,endDate\nfoo,2023-01-01,2023-01-04",
-    );
-  });
+jest.mock("@app/forecasting", () => ({
+  showAsCalendar: jest.fn(),
+}));
 
+describe("GET /data/:filname/forecast/", () => {
   it("returns a 404 if a given file does not exist", async () => {
+    (showAsCalendar as jest.Mock).mockRejectedValueOnce(
+      new TeamNotFoundError(),
+    );
     const server = buildServer({ logger: false });
 
     const response = await server.inject({
@@ -21,6 +22,7 @@ describe("GET /data/:filname/forecast/", () => {
   });
 
   it("returns a 200 with the the metrics home page for the uploaded file", async () => {
+    (showAsCalendar as jest.Mock).mockResolvedValueOnce({});
     const server = buildServer({ logger: false });
 
     const response = await server.inject({

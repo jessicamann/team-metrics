@@ -1,7 +1,8 @@
 import { percentiles } from "@app/common/math";
+import { getById } from "@app/common/repository";
 import { eachDayOfInterval, endOfDay, format } from "date-fns";
 import { runMonteCarlo } from "./montecarlo";
-import { readIntoForecastingData } from "./reader";
+import { intoForecastData } from "./reader";
 
 type ShortDate = string; // yyyy-mm-dd
 
@@ -21,14 +22,14 @@ export function toCalendarData(
   }));
 }
 
-export async function showAsCalendar(filepath: string): Promise<{
+export async function showAsCalendar(id: string): Promise<{
   calendarData: { date: string; value?: number }[];
   remainingStories: number;
   p50: ShortDate;
   p85: ShortDate;
   p95: ShortDate;
 }> {
-  const { throughput, remaining } = await readIntoForecastingData(filepath);
+  const { throughput, remaining } = intoForecastData(getById(id));
 
   const results = runMonteCarlo(10000, remaining, throughput).sort();
   const {

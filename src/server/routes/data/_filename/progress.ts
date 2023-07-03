@@ -1,6 +1,6 @@
-import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
-import { existsSync } from "fs";
+import { TeamNotFoundError } from "@app/common/repository";
 import { showAsDonutChartsByFeature } from "@app/progress";
+import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 
 export default async function (f: FastifyInstance) {
   f.get(
@@ -13,21 +13,24 @@ export default async function (f: FastifyInstance) {
       reply: FastifyReply,
     ) => {
       const dataset = request.params.filename;
-      const filename = `${dataset}.csv`;
-      const filepath = `./uploads/${filename}`;
-
-      if (!existsSync(filepath)) {
-        return reply.code(404).send();
-      }
 
       const options = request.query.features
         ? { only: request.query.features }
         : {};
-      const charts = await showAsDonutChartsByFeature(filepath, options);
-      return reply.view("/templates/progress/index.ejs", {
-        dataSet: dataset,
-        features: charts,
-      });
+
+      try {
+        const charts = await showAsDonutChartsByFeature(dataset, options);
+        return reply.view("/templates/progress/index.ejs", {
+          dataSet: dataset,
+          features: charts,
+        });
+      } catch (e) {
+        f.log.error(e);
+        if (e instanceof TeamNotFoundError) {
+          return reply.code(404).send();
+        }
+        return reply.code(500).send("something else went wrong");
+      }
     },
   );
 }

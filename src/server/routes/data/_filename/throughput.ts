@@ -1,6 +1,6 @@
-import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
-import { existsSync } from "fs";
+import { TeamNotFoundError } from "@app/common/repository";
 import { showAsLineChart } from "@app/throughput";
+import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 
 export default async function (f: FastifyInstance) {
   f.get(
@@ -10,18 +10,20 @@ export default async function (f: FastifyInstance) {
       reply: FastifyReply,
     ) => {
       const dataset = request.params.filename;
-      const filename = `${dataset}.csv`;
-      const filepath = `./uploads/${filename}`;
 
-      if (!existsSync(filepath)) {
-        return reply.code(404).send();
+      try {
+        const chart = await showAsLineChart(dataset);
+        return reply.view("/templates/throughput/index.ejs", {
+          dataSet: dataset,
+          throughput: chart,
+        });
+      } catch (e) {
+        f.log.error(e);
+        if (e instanceof TeamNotFoundError) {
+          return reply.code(404).send();
+        }
+        return reply.code(500).send("something else went wrong");
       }
-
-      const chart = await showAsLineChart(filepath);
-      return reply.view("/templates/throughput/index.ejs", {
-        dataSet: dataset,
-        throughput: chart,
-      });
     },
   );
 }

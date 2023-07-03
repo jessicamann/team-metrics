@@ -1,14 +1,17 @@
-import { writeFileSync } from "fs";
+import { TeamNotFoundError } from "@app/common/repository";
+import { cycletimesSummary, forecastSummary } from "@app/dashboard";
 import { buildServer } from "@app/server";
 
+jest.mock("@app/dashboard", () => ({
+  cycletimesSummary: jest.fn(),
+  forecastSummary: jest.fn(),
+}));
+
 describe("GET /data/:filname/dashboard", () => {
-  beforeAll(() => {
-    writeFileSync(
-      "./uploads/dashboard-test.csv",
-      "id,startDate,endDate\nfoo,2023-01-01,2023-01-04",
-    );
-  });
   it("returns a 404 if a given file does not exist", async () => {
+    (cycletimesSummary as jest.Mock).mockRejectedValueOnce(
+      new TeamNotFoundError(),
+    );
     const server = buildServer({ logger: false });
 
     const response = await server.inject({
@@ -20,6 +23,8 @@ describe("GET /data/:filname/dashboard", () => {
   });
 
   it("returns a 200 with the the metrics home page for the uploaded file", async () => {
+    (cycletimesSummary as jest.Mock).mockResolvedValueOnce({ outliers: [] });
+    (forecastSummary as jest.Mock).mockResolvedValueOnce([]);
     const server = buildServer({ logger: false });
 
     const response = await server.inject({

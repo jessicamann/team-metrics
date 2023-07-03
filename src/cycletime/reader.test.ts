@@ -1,14 +1,15 @@
-import { cycletimeBetween, readAsCycleTiime } from "./reader";
-import { CycleTime } from "./types";
+import { cycletimeBetween, intoCycleTime } from "./reader";
 
-describe("readAsCycleTiime", () => {
-  let subject: CycleTime[];
-  beforeAll(async () => {
-    subject = await readAsCycleTiime("./fixtures/some-data.csv");
-  });
+describe("readAsCycleTime", () => {
+  const inputData = [
+    { id: "1", startDate: "2023-01-04", endDate: "2023-01-05", feature: "" },
+    { id: "2", startDate: "2023-01-04", endDate: "2023-01-05", feature: "" },
+    { id: "3", startDate: "", endDate: "2023-01-05", feature: "" },
+    { id: "4", startDate: "", endDate: "", feature: "" },
+  ];
 
   it("returns the data as cycle time", () => {
-    expect(subject).toEqual(
+    expect(intoCycleTime(inputData)).toEqual(
       expect.arrayContaining([
         { id: "1", completedAt: new Date("2023-01-05"), cycletime: 2 },
       ]),
@@ -16,7 +17,7 @@ describe("readAsCycleTiime", () => {
   });
 
   it("does not include stories that did not start yet", () => {
-    expect(subject).not.toEqual(
+    expect(intoCycleTime(inputData)).not.toEqual(
       expect.arrayContaining([
         expect.objectContaining({ id: "2" }),
         expect.objectContaining({ id: "4" }),
@@ -25,7 +26,7 @@ describe("readAsCycleTiime", () => {
   });
 
   it("does not include stories that hasn't ended yet", () => {
-    expect(subject).not.toEqual(
+    expect(intoCycleTime(inputData)).not.toEqual(
       expect.arrayContaining([
         expect.objectContaining({ id: "3" }),
         expect.objectContaining({ id: "4" }),

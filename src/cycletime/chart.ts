@@ -1,6 +1,7 @@
 import { blueGreen, coral, emerald, freesia } from "@app/colors";
 import { percentiles } from "@app/common/math";
-import { readAsCycleTiime } from "./reader";
+import { intoCycleTime } from "./reader";
+import { getById } from "@app/common/repository";
 
 type CycleTime = number;
 type Point = {
@@ -38,8 +39,9 @@ function toPLine(
   };
 }
 
-export async function showAsScatterChart(filepath: string) {
-  const _data = await readAsCycleTiime(filepath);
+export async function showAsScatterChart(id: string) {
+  const input = getById(id);
+  const _data = intoCycleTime(input);
 
   const data: Point[] = _data.map((story) => ({
     x: story.completedAt,

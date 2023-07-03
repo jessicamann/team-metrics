@@ -1,7 +1,7 @@
-import { groupBy, some } from "lodash";
-import { readFromCsvAndDo } from "@app/common/csv";
-import { byWeek, readAsThroughput } from "@app/throughput";
+import { InputData } from "@app/common/repository";
+import { byWeek, intoThroughput } from "@app/throughput";
 import { isAfter, subMonths } from "date-fns";
+import { groupBy, some } from "lodash";
 
 export type Forecastable = {
   id: string;
@@ -15,38 +15,22 @@ function isRecent(...dates: string[]) {
   return some(dates, (d) => isAfter(new Date(d), oneMonthAgo));
 }
 
-function readAsForecastable(filepath: string): Promise<Forecastable[]> {
-  return readFromCsvAndDo(filepath, (row, skip) => {
-    const { id, startDate, endDate, feature } = row as {
-      id: string;
-      startDate: string;
-      endDate: string;
-      feature: string;
-    };
-
-    if (!feature) {
-      skip();
-    }
-
-    const completed = !!endDate;
-    const recentlyWorkedOn = isRecent(startDate, endDate);
-    return { id, completed, feature, recentlyWorkedOn };
-  });
+function intoForecast(data: InputData[]): Forecastable[] {
+  return data
+    .filter((d) => d.feature)
+    .map((d) => ({
+      id: d.id,
+      completed: !!d.endDate,
+      feature: d.feature,
+      recentlyWorkedOn: isRecent(d.startDate, d.endDate),
+    }));
 }
 
-export async function readIntoProgressAndForecastable(filepath: string) {
-  const throughputPromise = readAsThroughput(filepath).then((r) =>
-    r.toThroughput(byWeek).map((d) => d.total),
-  );
+export function intoForecastSummary(data: InputData[]) {
+  const throughput = intoThroughput(data)
+    .toThroughput(byWeek)
+    .map((d) => d.total);
+  const forecast = groupBy(intoForecast(data), "feature");
 
-  const forecastablePromise = readAsForecastable(filepath).then((r) =>
-    groupBy(r, "feature"),
-  );
-
-  const [throughput, forecastableByFeature] = await Promise.all([
-    throughputPromise,
-    forecastablePromise,
-  ]);
-
-  return { throughput, forecastableByFeature };
+  return { throughput, forecastableByFeature: forecast };
 }

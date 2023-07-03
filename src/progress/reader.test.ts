@@ -1,83 +1,84 @@
 import { writeFileSync } from "fs";
-import { readAsStoryData } from "./reader";
+import { intoProgressData } from "./reader";
 
-describe("readAsStoryData", () => {
-  it("skips any story without a feature", async () => {
-    writeFileSync(
-      "./fixtures/progress-transform-test.csv",
-      "id,startDate,endDate\nTeam-123,,\nTEAM-2,2023-06-09,2023-06-14\n",
-    );
+describe("intoProgressData", () => {
+  it("skips any story without a feature", () => {
+    const input = [
+      { id: "Team-123", startDate: "", endDate: "", feature: "" },
+      {
+        id: "nTEAM-2",
+        startDate: "2023-06-09",
+        endDate: "2023-06-14",
+        feature: "",
+      },
+    ];
 
-    const result = await readAsStoryData(
-      "./fixtures/progress-transform-test.csv",
-    );
+    const result = intoProgressData(input);
 
     expect(result).toHaveLength(0);
   });
 
-  it("skips any story not part a feature, if an exlusion is provided", async () => {
-    writeFileSync(
-      "./fixtures/progress-transform-test.csv",
-      "id,startDate,endDate,feature\nTeam-123,,,A\nTEAM-2,2023-06-09,2023-06-14,B\n",
-    );
+  it("skips any story not part a feature, if an exlusion is provided", () => {
+    const input = [
+      { id: "Team-123", startDate: "", endDate: "", feature: "A" },
+      {
+        id: "nTEAM-2",
+        startDate: "2023-06-09",
+        endDate: "2023-06-14",
+        feature: "B",
+      },
+    ];
 
-    const result = await readAsStoryData(
-      "./fixtures/progress-transform-test.csv",
-      { only: "A" },
-    );
+    const result = intoProgressData(input, { only: "A" });
 
     expect(result).toHaveLength(1);
   });
 
-  it("skips any story not part a list of features, if an exlusion list is provided", async () => {
-    writeFileSync(
-      "./fixtures/progress-transform-test.csv",
-      "id,startDate,endDate,feature\nTeam-123,,,A\nTEAM-2,2023-06-09,2023-06-14,B\nTEAM-6,2023-06-09,2023-06-14,C\n",
-    );
-
-    const result = await readAsStoryData(
-      "./fixtures/progress-transform-test.csv",
-      { only: ["A", "B"] },
-    );
+  it("skips any story not part a list of features, if an exlusion list is provided", () => {
+    const input = [
+      { id: "Team-123", startDate: "", endDate: "", feature: "A" },
+      {
+        id: "nTEAM-2",
+        startDate: "2023-06-09",
+        endDate: "2023-06-14",
+        feature: "B",
+      },
+      {
+        id: "nTEAM-2",
+        startDate: "2023-06-09",
+        endDate: "2023-06-14",
+        feature: "C",
+      },
+    ];
+    const result = intoProgressData(input, { only: ["A", "B"] });
 
     expect(result).toHaveLength(2);
   });
 
-  it("determines the status is done if the story has an end date", async () => {
-    writeFileSync(
-      "./fixtures/progress-transform-test.csv",
-      "id,startDate,endDate,feature\nTeam-123,,2020-01-23,A\n",
-    );
+  it("determines the status is done if the story has an end date", () => {
+    const input = [
+      { id: "Team-123", startDate: "", endDate: "2020-01-23", feature: "A" },
+    ];
 
-    const result = await readAsStoryData(
-      "./fixtures/progress-transform-test.csv",
-    );
-
+    const result = intoProgressData(input);
     expect(result).toEqual([{ feature: "A", status: "Done" }]);
   });
 
-  it("determines the story as in progress if it has a start date but no end date", async () => {
-    writeFileSync(
-      "./fixtures/progress-transform-test.csv",
-      "id,startDate,endDate,feature\nTeam-123,2020-01-01,,A\n",
-    );
+  it("determines the story as in progress if it has a start date but no end date", () => {
+    const input = [
+      { id: "Team-123", startDate: "2020-01-01", endDate: "", feature: "A" },
+    ];
 
-    const result = await readAsStoryData(
-      "./fixtures/progress-transform-test.csv",
-    );
-
+    const result = intoProgressData(input);
     expect(result).toEqual([{ feature: "A", status: "In progress" }]);
   });
 
-  it("determines the story as not started if there is no start date or end date", async () => {
-    writeFileSync(
-      "./fixtures/progress-transform-test.csv",
-      "id,startDate,endDate,feature\nTeam-123,,,A\n",
-    );
+  it("determines the story as not started if there is no start date or end date", () => {
+    const input = [
+      { id: "Team-123", startDate: "", endDate: "", feature: "A" },
+    ];
 
-    const result = await readAsStoryData(
-      "./fixtures/progress-transform-test.csv",
-    );
+    const result = intoProgressData(input);
 
     expect(result).toEqual([{ feature: "A", status: "Not started" }]);
   });

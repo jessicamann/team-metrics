@@ -1,10 +1,10 @@
 import { bluePurple, opal } from "@app/colors";
+import { getById } from "@app/common/repository";
 import { byWeek } from "./durations";
-import { readAsStory } from "./reader";
+import { intoThroughput } from "./reader";
 
-export async function showAsLineChart(filepath: string) {
-  const data = await readAsStory(filepath);
-  const throughput = data
+export async function showAsLineChart(id: string) {
+  const throughput = intoThroughput(getById(id))
     .toThroughput(byWeek)
     .sort((a, b) => a.periodEnd.getTime() - b.periodEnd.getTime());
 

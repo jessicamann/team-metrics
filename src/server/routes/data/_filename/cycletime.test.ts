@@ -1,15 +1,16 @@
-import { writeFileSync, writeSync } from "fs";
+import { TeamNotFoundError } from "@app/common/repository";
+import { showAsScatterChart } from "@app/cycletime";
 import { buildServer } from "@app/server";
 
-describe("GET /data/:filname/cycletime", () => {
-  beforeAll(() => {
-    writeFileSync(
-      "./uploads/cycletime-file.csv",
-      "id,startDate,endDate\nfoo,2023-01-01,2023-01-04",
-    );
-  });
+jest.mock("@app/cycletime", () => ({
+  showAsScatterChart: jest.fn(),
+}));
 
+describe("GET /data/:filname/cycletime", () => {
   it("returns a 404 if a given file does not exist", async () => {
+    (showAsScatterChart as jest.Mock).mockRejectedValueOnce(
+      new TeamNotFoundError(),
+    );
     const server = buildServer({ logger: false });
 
     const response = await server.inject({
@@ -21,11 +22,12 @@ describe("GET /data/:filname/cycletime", () => {
   });
 
   it("returns a 200 with the the metrics home page for the uploaded file", async () => {
+    (showAsScatterChart as jest.Mock).mockResolvedValueOnce({});
     const server = buildServer({ logger: false });
 
     const response = await server.inject({
       method: "GET",
-      url: "/data/cycletime-file/cycletime",
+      url: "/data/test-file/cycletime",
     });
 
     expect(response.statusCode).toEqual(200);

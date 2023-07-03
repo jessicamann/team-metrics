@@ -1,6 +1,6 @@
-import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
-import { existsSync } from "fs";
+import { TeamNotFoundError } from "@app/common/repository";
 import { showAsCalendar } from "@app/forecasting";
+import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 
 export default async function (f: FastifyInstance) {
   f.get(
@@ -13,23 +13,24 @@ export default async function (f: FastifyInstance) {
       reply: FastifyReply,
     ) => {
       const dataset = request.params.filename;
-      const filename = `${dataset}.csv`;
-      const filepath = `./uploads/${filename}`;
 
-      if (!existsSync(filepath)) {
-        return reply.code(404).send();
+      try {
+        const result = await showAsCalendar(dataset);
+        return reply.view("/templates/forecasts/index.ejs", {
+          dataSet: dataset,
+          remainingStories: result.remainingStories,
+          calendarData: result.calendarData,
+          p50: result.p50,
+          p85: result.p85,
+          p95: result.p95,
+        });
+      } catch (e) {
+        f.log.error(e);
+        if (e instanceof TeamNotFoundError) {
+          return reply.code(404).send();
+        }
+        return reply.code(500).send("something else went wrong");
       }
-
-      const result = await showAsCalendar(filepath);
-
-      return reply.view("/templates/forecasts/index.ejs", {
-        dataSet: dataset,
-        remainingStories: result.remainingStories,
-        calendarData: result.calendarData,
-        p50: result.p50,
-        p85: result.p85,
-        p95: result.p95,
-      });
     },
   );
 }

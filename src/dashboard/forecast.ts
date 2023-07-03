@@ -1,8 +1,9 @@
-import { format } from "date-fns";
-import { compact, countBy, every, map, some } from "lodash";
 import { percentiles } from "@app/common/math";
+import { getById } from "@app/common/repository";
 import { runMonteCarlo } from "@app/forecasting";
-import { Forecastable, readIntoProgressAndForecastable } from "./reader";
+import { format } from "date-fns";
+import { compact, countBy, every, map } from "lodash";
+import { Forecastable, intoForecastSummary } from "./reader";
 
 type Summary = {
   name: string;
@@ -26,11 +27,11 @@ function shouldSkip(items: Forecastable[]) {
 }
 
 export async function forecastSummary(
-  filepath: string,
+  id: string,
   options: Options,
 ): Promise<Summary[]> {
-  const { throughput, forecastableByFeature } =
-    await readIntoProgressAndForecastable(filepath);
+  const data = getById(id);
+  const { throughput, forecastableByFeature } = intoForecastSummary(data);
 
   return compact(
     map(forecastableByFeature, (value, key) => {

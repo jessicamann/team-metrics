@@ -31,7 +31,7 @@ describe("POST /data", () => {
 
     expect(response.statusCode).toEqual(303);
     expect(response.headers.location).toEqual("/data/test-file");
-    expect(existsSync("./uploads/test-file.csv")).toBeTruthy();
+    expect(existsSync("./uploads/test-file.json")).toBeTruthy();
   });
 });
 

@@ -1,6 +1,6 @@
 import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
-import { existsSync } from "fs";
 import { cycletimesSummary, forecastSummary } from "@app/dashboard";
+import { TeamNotFoundError } from "@app/common/repository";
 
 export default async function (f: FastifyInstance) {
   f.get(
@@ -13,39 +13,41 @@ export default async function (f: FastifyInstance) {
       reply: FastifyReply,
     ) => {
       const dataset = request.params.filename;
-      const filename = `${dataset}.csv`;
-      const filepath = `./uploads/${filename}`;
 
-      if (!existsSync(filepath)) {
-        return reply.code(404).send();
+      try {
+        const [{ outliers, p25, p75, p85 }, summary] = await Promise.all([
+          cycletimesSummary(dataset),
+          forecastSummary(dataset, { onlyRecent: true }),
+        ]);
+
+        return reply.view("/templates/dashboard/index.ejs", {
+          dataSet: dataset,
+          cycleTimeData: {
+            threshold: {
+              text: "85%",
+              value: p85,
+            },
+          },
+          outliers: {
+            threshold: {
+              text: "85th",
+              value: p85,
+            },
+            items: outliers,
+          },
+          consistency: {
+            p25,
+            p75,
+          },
+          forecastedProgress: summary,
+        });
+      } catch (e) {
+        f.log.error(e);
+        if (e instanceof TeamNotFoundError) {
+          return reply.code(404).send();
+        }
+        return reply.code(500).send("something else went wrong");
       }
-
-      const [{ outliers, p25, p75, p85 }, summary] = await Promise.all([
-        cycletimesSummary(filepath),
-        forecastSummary(filepath, { onlyRecent: true }),
-      ]);
-
-      return reply.view("/templates/dashboard/index.ejs", {
-        dataSet: dataset,
-        cycleTimeData: {
-          threshold: {
-            text: "85%",
-            value: p85,
-          },
-        },
-        outliers: {
-          threshold: {
-            text: "85th",
-            value: p85,
-          },
-          items: outliers,
-        },
-        consistency: {
-          p25,
-          p75,
-        },
-        forecastedProgress: summary,
-      });
     },
   );
 }
