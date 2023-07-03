@@ -7,17 +7,17 @@ export default async function (f: FastifyInstance) {
     "/forecast",
     async (
       request: FastifyRequest<{
-        Params: { filename: string };
+        Params: { id: string };
         Querystring: { features: "array" };
       }>,
       reply: FastifyReply,
     ) => {
-      const dataset = request.params.filename;
+      const id = request.params.id;
 
       try {
-        const result = await showAsCalendar(dataset);
+        const result = await showAsCalendar(id);
         return reply.view("/templates/forecasts/index.ejs", {
-          dataSet: dataset,
+          dataSet: id,
           remainingStories: result.remainingStories,
           calendarData: result.calendarData,
           p50: result.p50,

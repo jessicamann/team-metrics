@@ -7,21 +7,21 @@ export default async function (f: FastifyInstance) {
     "/dashboard",
     async (
       request: FastifyRequest<{
-        Params: { filename: string };
+        Params: { id: string };
         Querystring: { features: "array" };
       }>,
       reply: FastifyReply,
     ) => {
-      const dataset = request.params.filename;
+      const id = request.params.id;
 
       try {
         const [{ outliers, p25, p75, p85 }, summary] = await Promise.all([
-          cycletimesSummary(dataset),
-          forecastSummary(dataset, { onlyRecent: true }),
+          cycletimesSummary(id),
+          forecastSummary(id, { onlyRecent: true }),
         ]);
 
         return reply.view("/templates/dashboard/index.ejs", {
-          dataSet: dataset,
+          dataSet: id,
           cycleTimeData: {
             threshold: {
               text: "85%",

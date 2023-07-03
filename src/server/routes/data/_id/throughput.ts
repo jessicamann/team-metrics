@@ -6,15 +6,15 @@ export default async function (f: FastifyInstance) {
   f.get(
     "/throughput",
     async (
-      request: FastifyRequest<{ Params: { filename: string } }>,
+      request: FastifyRequest<{ Params: { id: string } }>,
       reply: FastifyReply,
     ) => {
-      const dataset = request.params.filename;
+      const id = request.params.id;
 
       try {
-        const chart = await showAsLineChart(dataset);
+        const chart = await showAsLineChart(id);
         return reply.view("/templates/throughput/index.ejs", {
-          dataSet: dataset,
+          dataSet: id,
           throughput: chart,
         });
       } catch (e) {

@@ -6,15 +6,15 @@ export default async function (f: FastifyInstance) {
   f.get(
     "/cycletime",
     async (
-      request: FastifyRequest<{ Params: { filename: string } }>,
+      request: FastifyRequest<{ Params: { id: string } }>,
       reply: FastifyReply,
     ) => {
-      const dataset = request.params.filename;
+      const id = request.params.id;
 
       try {
-        const { chart, p50, p85, p95 } = await showAsScatterChart(dataset);
+        const { chart, p50, p85, p95 } = await showAsScatterChart(id);
         return reply.view("/templates/cycletime/index.ejs", {
-          dataSet: dataset,
+          dataSet: id,
           cycleTimeChart: chart,
           p95,
           p85,

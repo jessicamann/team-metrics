@@ -7,21 +7,21 @@ export default async function (f: FastifyInstance) {
     "/progress",
     async (
       request: FastifyRequest<{
-        Params: { filename: string };
+        Params: { id: string };
         Querystring: { features: "array" };
       }>,
       reply: FastifyReply,
     ) => {
-      const dataset = request.params.filename;
+      const id = request.params.id;
 
       const options = request.query.features
         ? { only: request.query.features }
         : {};
 
       try {
-        const charts = await showAsDonutChartsByFeature(dataset, options);
+        const charts = await showAsDonutChartsByFeature(id, options);
         return reply.view("/templates/progress/index.ejs", {
-          dataSet: dataset,
+          dataSet: id,
           features: charts,
         });
       } catch (e) {

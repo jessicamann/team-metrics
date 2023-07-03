@@ -21,14 +21,14 @@ export default async function (f: FastifyInstance) {
   });
 
   f.get(
-    "/:filename",
+    "/:id",
     (
-      request: FastifyRequest<{ Params: { filename: string } }>,
+      request: FastifyRequest<{ Params: { id: string } }>,
       reply: FastifyReply,
     ) => {
-      const filename = request.params.filename;
-      if (existsSync(`./uploads/${filename}.json`)) {
-        reply.view("/templates/team/index.ejs", { dataSet: filename });
+      const id = request.params.id;
+      if (existsSync(`./uploads/${id}.json`)) {
+        reply.view("/templates/team/index.ejs", { dataSet: id });
       } else {
         reply.code(404).send();
       }
