@@ -1,5 +1,5 @@
+import { Feature, StoryData } from "@app/progress/type";
 import { countBy, groupBy } from "lodash";
-import { Feature, StoryData } from "./type";
 
 /**
  *

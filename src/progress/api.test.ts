@@ -1,6 +1,6 @@
-import { intoProgressData } from "./reader";
+import { toProgress } from "./api";
 
-describe("intoProgressData", () => {
+describe("toProgress", () => {
   it("skips any story without a feature", () => {
     const input = [
       {
@@ -17,7 +17,7 @@ describe("intoProgressData", () => {
       },
     ];
 
-    const result = intoProgressData(input);
+    const result = toProgress(input);
 
     expect(result).toHaveLength(0);
   });
@@ -38,7 +38,7 @@ describe("intoProgressData", () => {
       },
     ];
 
-    const result = intoProgressData(input);
+    const result = toProgress(input);
 
     expect(result).toHaveLength(2);
   });
@@ -59,7 +59,7 @@ describe("intoProgressData", () => {
       },
     ];
 
-    const result = intoProgressData(input, { only: "A" });
+    const result = toProgress(input, { only: "A" });
 
     expect(result).toHaveLength(1);
   });
@@ -85,7 +85,7 @@ describe("intoProgressData", () => {
         feature: "C",
       },
     ];
-    const result = intoProgressData(input, { only: ["A", "B"] });
+    const result = toProgress(input, { only: ["A", "B"] });
 
     expect(result).toHaveLength(2);
   });
@@ -95,7 +95,7 @@ describe("intoProgressData", () => {
       { id: "Team-123", startDate: "", endDate: "2020-01-23", feature: "A" },
     ];
 
-    const result = intoProgressData(input);
+    const result = toProgress(input);
     expect(result).toEqual([{ feature: "A", status: "Done" }]);
   });
 
@@ -104,7 +104,7 @@ describe("intoProgressData", () => {
       { id: "Team-123", startDate: "2020-01-01", endDate: "", feature: "A" },
     ];
 
-    const result = intoProgressData(input);
+    const result = toProgress(input);
     expect(result).toEqual([{ feature: "A", status: "In progress" }]);
   });
 
@@ -113,7 +113,7 @@ describe("intoProgressData", () => {
       { id: "Team-123", startDate: "", endDate: "", feature: "A" },
     ];
 
-    const result = intoProgressData(input);
+    const result = toProgress(input);
 
     expect(result).toEqual([{ feature: "A", status: "Not started" }]);
   });

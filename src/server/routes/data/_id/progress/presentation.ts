@@ -1,13 +1,9 @@
+import { map } from "lodash";
 import { blush, cyberYellow, emerald, gray } from "@app/colors";
 import { InputData } from "@app/common/repository";
-import {
-  countByStatus,
-  groupByFeature,
-  intoProgressData,
-  Options,
-  StoryData,
-} from "@app/progress";
-import { map } from "lodash";
+import { Options, StoryData } from "@app/progress/type";
+import { toProgress } from "@app/progress/api";
+import { countByStatus, groupByFeature } from "./util";
 
 function toOneDonutChart(feature: string, stories: StoryData[]) {
   const count = countByStatus(stories);
@@ -44,7 +40,7 @@ export function showAsDonutChartsByFeature(
   data: InputData[],
   options?: Options,
 ) {
-  const stories = intoProgressData(data, options);
+  const stories = toProgress(data, options);
   const byFeatures = groupByFeature(stories);
 
   return map(byFeatures, (value, key) => toOneDonutChart(key, value));

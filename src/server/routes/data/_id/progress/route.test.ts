@@ -1,11 +1,10 @@
 import { TeamNotFoundError, getById } from "@app/common/repository";
 import { buildServer } from "@app/server";
 
-const mockIntoProgressData = jest.fn();
+const mockToProgress = jest.fn();
 jest.mock("@app/common/repository");
-jest.mock("@app/progress", () => ({
-  intoProgressData: mockIntoProgressData,
-  groupByFeature: () => {},
+jest.mock("@app/progress/api", () => ({
+  toProgress: mockToProgress,
 }));
 
 describe("GET /data/:id/progress", () => {
@@ -24,7 +23,7 @@ describe("GET /data/:id/progress", () => {
   });
 
   it("returns a 200 with the Progress page", async () => {
-    mockIntoProgressData.mockResolvedValueOnce([]);
+    mockToProgress.mockResolvedValueOnce([]);
     const server = buildServer({ logger: false });
 
     const response = await server.inject({

@@ -1,4 +1,4 @@
-import { countByStatus, groupByFeature } from "./calculate";
+import { countByStatus, groupByFeature } from "./util";
 
 describe("groupByFeature", () => {
   it("returns the stories grouped under shared featuress", () => {
