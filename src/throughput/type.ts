@@ -1,4 +1,4 @@
-export type GroupFn = (data: StoryData[]) => Record<string, StoryData[]>;
+export type DurationFn = (data: StoryData[]) => Record<string, StoryData[]>;
 
 export type StoryData = {
   completedAt: Date;
@@ -7,7 +7,7 @@ export type StoryData = {
 
 export interface StoryDataList {
   stories: StoryData[];
-  count: (fn: GroupFn) => ThroughputData[];
+  count: (fn: DurationFn) => ThroughputData[];
 }
 
 export type ThroughputData = {

@@ -3,8 +3,9 @@ import { buildServer } from "@app/server";
 
 const mockIntoThroughput = jest.fn();
 jest.mock("@app/common/repository");
-jest.mock("@app/throughput", () => ({
+jest.mock("@app/throughput/api", () => ({
   intoThroughput: mockIntoThroughput,
+  Duration: { byWeek: () => {} },
 }));
 
 describe("GET /data/:id/throughput", () => {

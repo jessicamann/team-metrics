@@ -1,7 +1,7 @@
 import { TeamNotFoundError, getById } from "@app/common/repository";
 import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import { showAsLineChart } from "./presentation";
-import { byWeek, intoThroughput } from "@app/throughput";
+import { Duration, intoThroughput } from "@app/throughput/api";
 
 export default async function (f: FastifyInstance) {
   f.get(
@@ -13,7 +13,7 @@ export default async function (f: FastifyInstance) {
       const id = request.params.id;
 
       try {
-        const data = intoThroughput(getById(id)).count(byWeek);
+        const data = intoThroughput(getById(id)).count(Duration.byWeek);
         const chart = showAsLineChart(data);
         return reply.view("/templates/throughput/index.ejs", {
           dataSet: id,

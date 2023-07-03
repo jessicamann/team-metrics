@@ -1,5 +1,5 @@
 import { InputData } from "@app/common/repository";
-import { byWeek, intoThroughput } from "@app/throughput";
+import { Duration, intoThroughput } from "@app/throughput/api";
 
 export type ForecastingData = {
   remaining: number;
@@ -8,7 +8,7 @@ export type ForecastingData = {
 
 export function intoForecastData(data: InputData[]): ForecastingData {
   const throughput = intoThroughput(data)
-    .count(byWeek)
+    .count(Duration.byWeek)
     .map((d) => d.total);
   const remaining = data.filter((d) => !d.endDate).length;
 
