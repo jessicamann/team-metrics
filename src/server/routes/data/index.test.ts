@@ -1,7 +1,7 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore: this library is not type friendly
 import formAutoContent from "form-auto-content";
-import { createReadStream, existsSync } from "fs";
+import { createReadStream, existsSync, writeFileSync } from "fs";
 import { buildServer } from "@app/server";
 
 describe("POST /data", () => {
@@ -50,9 +50,10 @@ describe("GET /data/:filename", () => {
   it("returns a 200 with the the metrics home page for the uploaded file", async () => {
     const server = buildServer({ logger: false });
 
+    writeFileSync("./uploads/foo-test.json", "[]");
     const response = await server.inject({
       method: "GET",
-      url: "/data/test-file",
+      url: "/data/foo-test",
     });
 
     expect(response.statusCode).toEqual(200);
