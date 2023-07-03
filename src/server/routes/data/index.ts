@@ -1,8 +1,9 @@
-import csv from "csvtojson";
-import { generate } from "randomstring";
+import { existsById } from "@app/common/repository";
 import { MultipartFile } from "@fastify/multipart";
+import csv from "csvtojson";
 import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
-import { existsSync, writeFileSync } from "fs";
+import { writeFileSync } from "fs";
+import { generate } from "randomstring";
 
 export default async function (f: FastifyInstance) {
   f.post("/", async (request: FastifyRequest, reply: FastifyReply) => {
@@ -22,11 +23,9 @@ export default async function (f: FastifyInstance) {
       reply: FastifyReply,
     ) => {
       const id = request.params.id;
-      if (existsSync(`./uploads/${id}.json`)) {
-        reply.view("/templates/team/index.ejs", { dataSet: id });
-      } else {
-        reply.code(404).send();
-      }
+      existsById(id)
+        ? reply.view("/templates/team/index.ejs", { dataSet: id })
+        : reply.code(404).send();
     },
   );
 }

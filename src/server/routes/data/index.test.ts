@@ -3,17 +3,19 @@
 import formAutoContent from "form-auto-content";
 import { createReadStream, existsSync, mkdirSync, writeFileSync } from "fs";
 import { buildServer } from "@app/server";
+import { existsById } from "@app/common/repository";
 
+jest.mock("@app/common/repository");
 jest.mock("randomstring", () => ({
   generate: () => "test-id",
 }));
 
-beforeAll(() => {
-  if (existsSync("./uploads")) return;
-  mkdirSync("./uploads");
-});
-
 describe("POST /data", () => {
+  beforeAll(() => {
+    if (existsSync("./uploads")) return;
+    mkdirSync("./uploads");
+  });
+
   it("returns 406 if no file was provided", async () => {
     const server = buildServer({ logger: false });
 
@@ -46,6 +48,7 @@ describe("POST /data", () => {
 
 describe("GET /data/:filename", () => {
   it("returns a 404 if a given file does not exist", async () => {
+    (existsById as jest.Mock).mockReturnValue(false);
     const server = buildServer({ logger: false });
 
     const response = await server.inject({
@@ -57,9 +60,9 @@ describe("GET /data/:filename", () => {
   });
 
   it("returns a 200 with the the metrics home page for the uploaded file", async () => {
+    (existsById as jest.Mock).mockReturnValue(true);
     const server = buildServer({ logger: false });
 
-    writeFileSync("./uploads/foo-test.json", "[]");
     const response = await server.inject({
       method: "GET",
       url: "/data/foo-test",

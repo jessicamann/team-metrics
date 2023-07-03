@@ -17,3 +17,7 @@ export function getById(id: string): InputData[] {
   const path = `../../uploads/${id}.json`;
   return require(path);
 }
+
+export function existsById(id: string): boolean {
+  return existsSync(`./uploads/${id}.json`);
+}
