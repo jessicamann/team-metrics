@@ -1,10 +1,14 @@
-import { writeFileSync } from "fs";
 import { intoProgressData } from "./reader";
 
 describe("intoProgressData", () => {
   it("skips any story without a feature", () => {
     const input = [
-      { id: "Team-123", startDate: "", endDate: "", feature: "" },
+      {
+        id: "Team-123",
+        startDate: "",
+        endDate: "",
+        feature: "",
+      },
       {
         id: "nTEAM-2",
         startDate: "2023-06-09",
@@ -18,9 +22,35 @@ describe("intoProgressData", () => {
     expect(result).toHaveLength(0);
   });
 
+  it("returns all stories with a feature", () => {
+    const input = [
+      {
+        id: "Team-123",
+        startDate: "",
+        endDate: "",
+        feature: "A",
+      },
+      {
+        id: "nTEAM-2",
+        startDate: "2023-06-09",
+        endDate: "2023-06-14",
+        feature: "B",
+      },
+    ];
+
+    const result = intoProgressData(input);
+
+    expect(result).toHaveLength(2);
+  });
+
   it("skips any story not part a feature, if an exlusion is provided", () => {
     const input = [
-      { id: "Team-123", startDate: "", endDate: "", feature: "A" },
+      {
+        id: "Team-123",
+        startDate: "",
+        endDate: "",
+        feature: "A",
+      },
       {
         id: "nTEAM-2",
         startDate: "2023-06-09",
@@ -36,7 +66,12 @@ describe("intoProgressData", () => {
 
   it("skips any story not part a list of features, if an exlusion list is provided", () => {
     const input = [
-      { id: "Team-123", startDate: "", endDate: "", feature: "A" },
+      {
+        id: "Team-123",
+        startDate: "",
+        endDate: "",
+        feature: "A",
+      },
       {
         id: "nTEAM-2",
         startDate: "2023-06-09",

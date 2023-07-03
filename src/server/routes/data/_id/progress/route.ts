@@ -1,11 +1,11 @@
-import { TeamNotFoundError } from "@app/common/repository";
-import { showAsDonutChartsByFeature } from "@app/progress";
+import { TeamNotFoundError, getById } from "@app/common/repository";
 import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
+import { showAsDonutChartsByFeature } from "./presentation";
 
 export default async function (f: FastifyInstance) {
   f.get(
-    "/progress",
-    async (
+    "/",
+    (
       request: FastifyRequest<{
         Params: { id: string };
         Querystring: { features: "array" };
@@ -19,17 +19,17 @@ export default async function (f: FastifyInstance) {
         : {};
 
       try {
-        const charts = await showAsDonutChartsByFeature(id, options);
-        return reply.view("/templates/progress/index.ejs", {
+        const charts = showAsDonutChartsByFeature(getById(id), options);
+        reply.view("/templates/progress/index.ejs", {
           dataSet: id,
           features: charts,
         });
       } catch (e) {
         f.log.error(e);
         if (e instanceof TeamNotFoundError) {
-          return reply.code(404).send();
+          reply.code(404).send();
         }
-        return reply.code(500).send("something else went wrong");
+        reply.code(500).send("something else went wrong");
       }
     },
   );

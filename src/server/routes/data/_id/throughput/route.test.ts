@@ -19,7 +19,6 @@ describe("GET /data/:id/throughput", () => {
       url: "/data/foobar/throughput",
     });
 
-    console.log(response);
     expect(response.statusCode).toEqual(404);
   });
 

@@ -1,16 +1,18 @@
-import { TeamNotFoundError } from "@app/common/repository";
-import { showAsDonutChartsByFeature } from "@app/progress";
+import { TeamNotFoundError, getById } from "@app/common/repository";
 import { buildServer } from "@app/server";
 
+const mockIntoProgressData = jest.fn();
+jest.mock("@app/common/repository");
 jest.mock("@app/progress", () => ({
-  showAsDonutChartsByFeature: jest.fn(),
+  intoProgressData: mockIntoProgressData,
+  groupByFeature: () => {},
 }));
 
-describe("GET /data/:filname/progress", () => {
+describe("GET /data/:id/progress", () => {
   it("returns a 404 if a given file does not exist", async () => {
-    (showAsDonutChartsByFeature as jest.Mock).mockRejectedValueOnce(
-      new TeamNotFoundError(),
-    );
+    (getById as jest.Mock).mockImplementationOnce(() => {
+      throw new TeamNotFoundError();
+    });
     const server = buildServer({ logger: false });
 
     const response = await server.inject({
@@ -21,8 +23,8 @@ describe("GET /data/:filname/progress", () => {
     expect(response.statusCode).toEqual(404);
   });
 
-  it("returns a 200 with the the metrics home page for the uploaded file", async () => {
-    (showAsDonutChartsByFeature as jest.Mock).mockResolvedValueOnce([]);
+  it("returns a 200 with the Progress page", async () => {
+    mockIntoProgressData.mockResolvedValueOnce([]);
     const server = buildServer({ logger: false });
 
     const response = await server.inject({

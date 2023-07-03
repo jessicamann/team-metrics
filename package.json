@@ -26,7 +26,17 @@
     ],
     "rules": {
       "prettier/prettier": "error"
-    }
+    },
+    "overrides": [
+      {
+        "files": [
+          "**/*test.ts"
+        ],
+        "rules": {
+          "@typescript-eslint/no-empty-function": "off"
+        }
+      }
+    ]
   },
   "jest": {
     "preset": "ts-jest",
