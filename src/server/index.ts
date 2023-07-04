@@ -29,5 +29,12 @@ export function buildServer({ logger = true } = {}) {
     reply.code(303).header("location", `/oops`).send();
   });
 
+  fastify.setErrorHandler((e, req, reply) => {
+    fastify.log.error(e);
+    reply.code(500).send({
+      error: "internal server error; we'll take a look on our end.",
+    });
+  });
+
   return fastify;
 }
