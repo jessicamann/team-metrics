@@ -4,6 +4,8 @@
 
 .nvmrc
 
+railway.toml
+
 templates/
 
 **/*.csv
