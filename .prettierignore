@@ -9,6 +9,7 @@
 # deploy configs
 railway.toml
 nixpacks.toml
+Dockerfile
 
 templates/
 
