@@ -1,5 +1,6 @@
 [variables]
 NODE_ENV = 'production'
 
-[phases.build]
-cmds = ["echo beginning build", "...", "npm ci --omit=dev", "echo 'has dev dependency?' $(npm ls husky)"]
+[phases.prune]
+cmds = ['npm ci --omit=dev']
+dependsOn = ["build"]
