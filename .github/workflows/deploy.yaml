@@ -60,6 +60,6 @@ jobs:
         with:
           node-version: "18.16.1"
       - name: 🚀 Ship it!
-        run: npx --yes @railway/cli up
+        run: npx --yes @railway/cli up --verbose
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
