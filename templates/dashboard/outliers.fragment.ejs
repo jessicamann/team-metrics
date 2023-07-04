@@ -1,13 +1,18 @@
 <p class="title">Might want to take a look...</p>
 <% if (items.length > 0) { %>
-    <p class="subtitle">
+    <p class="subtitle mt-2">
         <span style="font-size: x-large;"><%- items.length %></span> items took more than
         <span style="font-size: x-large"> <%- threshold.value%> days</span> in the last month
         <span style="font-size: small"> (<%- threshold.text%> percentile)</span>
     </p>
 <% } else { %>
-    <p class="subtitle">
-        All good here!
+    <p class="subtitle mt-2">
+        <span class="icon-text">
+            <span class="icon">
+                <i class="far fa-circle-check"></i>
+            </span>
+            <span>Great job! Everything in the past month was completed in under <%- threshold.value%> days!</span>
+        </span>
     </p>
 <% } %>
 <div class="columns is-multiline">

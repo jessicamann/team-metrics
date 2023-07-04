@@ -1,55 +1,67 @@
 <p class="title">Where are we with the known work?</p>
-<% buckets.forEach((bucket) => { %>
-    <div class="card mt-2">
-        <div class="card-header">
-            <p class="card-header-title">
-                <%- bucket.name || "Not bucketed" %>
-            </p>
-        </div>
-        <div class="card-content">
-            <progress value="<%- bucket.progress.completed %>" max="<%- bucket.progress.total %>" class="progress is-info">
-            </progress>
-        </div>
-        <div class="content">
-            <div class="px-5 is-size-7">
-                        <span class="icon-text has-text-info">
-                          <span class="icon">
-                              <i class="fas fa-info-circle"></i>
-                          </span>
-                          <span>Forecast</span>
-                          </span>
-                <p class="block">
-                    Given what we known today, we forecast the completion of the work in the following dates and
-                    confidence levels.
+<% if (buckets.length > 0) { %>
+    <% buckets.forEach((bucket) => { %>
+        <div class="card mt-2">
+            <div class="card-header">
+                <p class="card-header-title">
+                    <%- bucket.name || "Not bucketed" %>
                 </p>
             </div>
-        </div>
-        <div class="content">
-            <div class="field is-grouped is-grouped-centered">
-                <div class="control">
-                    <div class="tags has-addons">
-                        <span class="tag"><%- bucket.forecast.p50 %></span>
-                        <span class="tag is-danger">50%</span>
-                    </div>
+            <div class="card-content">
+                <progress value="<%- bucket.progress.completed %>" max="<%- bucket.progress.total %>" class="progress is-info">
+                </progress>
+            </div>
+            <div class="content">
+                <div class="px-5 is-size-7">
+                            <span class="icon-text has-text-info">
+                              <span class="icon">
+                                  <i class="fas fa-info-circle"></i>
+                              </span>
+                              <span>Forecast</span>
+                              </span>
+                    <p class="block">
+                        Given what we known today, we forecast the completion of the work in the following dates and
+                        confidence levels.
+                    </p>
                 </div>
-
-                <div class="control">
-                    <div class="tags has-addons">
-                        <span class="tag"><%- bucket.forecast.p85 %></span>
-                        <span class="tag is-warning">85%</span>
+            </div>
+            <div class="content">
+                <div class="field is-grouped is-grouped-centered">
+                    <div class="control">
+                        <div class="tags has-addons">
+                            <span class="tag"><%- bucket.forecast.p50 %></span>
+                            <span class="tag is-danger">50%</span>
+                        </div>
                     </div>
-                </div>
-
-                <div class="control">
-                    <div class="tags has-addons">
-                        <span class="tag"><%- bucket.forecast.p95 %></span>
-                        <span class="tag is-info">95%</span>
+    
+                    <div class="control">
+                        <div class="tags has-addons">
+                            <span class="tag"><%- bucket.forecast.p85 %></span>
+                            <span class="tag is-warning">85%</span>
+                        </div>
+                    </div>
+    
+                    <div class="control">
+                        <div class="tags has-addons">
+                            <span class="tag"><%- bucket.forecast.p95 %></span>
+                            <span class="tag is-info">95%</span>
+                        </div>
                     </div>
                 </div>
             </div>
+            <footer class="card-footer">
+            </footer>
         </div>
-        <footer class="card-footer">
-        </footer>
-    </div>
-<% }) %>
-
+    <% }) %>
+<% } else { %>
+    <p class="subtitle mt-5">
+        It looks like nothing none of the features were recently worked on.
+        <br>
+        <span class="icon-text is-size-7">
+            <span class="icon">
+                <i class="fa-solid fa-circle-info"></i>
+            </span>
+            <span class="is-italic">Only features which have been worked on in the past month will show up here.</span>
+        </span>
+    </p>
+<% } %>
