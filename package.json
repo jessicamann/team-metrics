@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "description": "The one dashboard for a data-centric approach to measuring team progress and process improvements.",
   "main": "dist/index.js",
+  "engines": {
+    "node": "18"
+  },
   "scripts": {
     "clean": "rm -rf dist/",
     "build": "npm run clean && tsc -p ./tsconfig.build.json && tsc-alias",
