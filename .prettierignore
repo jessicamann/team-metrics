@@ -1,10 +1,14 @@
+# dev setting
 .husky/
 .prettierignore
 .gitignore
 
+# node config
 .nvmrc
 
+# deploy configs
 railway.toml
+nixpacks.toml
 
 templates/
 
