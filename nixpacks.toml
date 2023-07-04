@@ -1,8 +1,6 @@
 [variables]
 NODE_ENV = 'production'
 
-[phases.build]
-cmds = ['npm run build']
-
 [phases.prune]
-cmds = ['npm ci --omit-dev']
+cmds = ['npm ci --omit=dev']
+dependsOn = ["build"]
