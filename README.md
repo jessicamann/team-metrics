@@ -1,6 +1,7 @@
 # Team Metrics
 
 [![Build, Test, Deploy](https://github.com/jessicamann/team-metrics/actions/workflows/deploy.yaml/badge.svg)](https://github.com/jessicamann/team-metrics/actions/workflows/deploy.yaml)
+[![CodeFactor](https://www.codefactor.io/repository/github/jessicamann/team-metrics/badge)](https://www.codefactor.io/repository/github/jessicamann/team-metrics)
 
 Powerful metrics to lend insights into your team's value delivery process.
 
