@@ -4,3 +4,7 @@ NODE_ENV = 'production'
 [phases.prune]
 cmds = ['npm ci --omit=dev']
 dependsOn = ["build"]
+
+[phases.validate]
+cmds = ["echo 'has dev dependency?' $(npm ls husky)"]
+dependsOn = ["prune"]
