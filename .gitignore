@@ -151,5 +151,5 @@ dist
 docs/
 
 # Uplaoded
-uploads
+uploads/*.json
 !uploads/demo.json
