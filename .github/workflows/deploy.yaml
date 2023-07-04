@@ -25,4 +25,6 @@ jobs:
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
-          args: --severity-threshold=high
+          args: |
+            --severity-threshold=high
+            --project-nam=team-metrics
