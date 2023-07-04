@@ -25,7 +25,6 @@ COPY --from=builder /app/dist ./dist/
 COPY --from=builder /app/templates ./templates
 COPY --from=builder /app/uploads ./uploads
 COPY --from=dependencies /app/node_modules ./node_modules
-COPY --from=dependencies ["package.json", "package-lock.json", "./"]
 
 USER node
 
