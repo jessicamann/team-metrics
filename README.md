@@ -6,6 +6,10 @@
 
 Powerful metrics to lend insights into your team's value delivery process.
 
+👉🏻 [Checkout a demo](https://team-metrics-web-production.up.railway.app/data/demo)
+
+## Or if you prefer to run this locally
+
 ```zsh
 npm ci && npm run build && npm run start
 ```
