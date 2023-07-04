@@ -28,28 +28,6 @@ jobs:
           args: |
             --severity-threshold=high \
             --project-name=team-metrics
-  broadcast-result:
-    runs-on: ubuntu-latest
-    needs: security
-    steps:
-      - uses: slackapi/slack-github-action@v1.24.0
-        env:
-          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
-        with:
-          channel-id: C05FK7ZGD4L
-          payload: |
-            {
-              "text": "Build result: ${{ job.status }}\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}",
-              "blocks": [
-                {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": "Build result: ${{ job.status }}\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}"
-                  }
-                }
-              ]
-            }
   deploy:
     runs-on: ubuntu-latest
     needs: security
@@ -63,3 +41,26 @@ jobs:
         run: npx --yes @railway/cli up
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+  broadcast-result:
+    runs-on: ubuntu-latest
+    needs: deploy
+    if: ${{ always() }}
+    steps:
+      - uses: slackapi/slack-github-action@v1.24.0
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+        with:
+          channel-id: C05FK7ZGD4L
+          payload: |
+            {
+              "text": "Workflow: ${{ job.status }}\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}",
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "Workflow result: ${{ job.status }}\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}"
+                  }
+                }
+              ]
+            }
