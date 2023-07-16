@@ -1,0 +1,35 @@
+{
+    "port": 4545,
+    "protocol": "http",
+    "stubs": [
+        {
+            "predicates": [
+                {
+                    "exists": {
+                        "headers": {
+                            "authorization": true
+                        }
+                    },
+                    "equals": {
+                        "body": {
+                            "jql": "project in (b1)",
+                            "expand": [
+                                "changelog"
+                            ],
+                            "fields": [
+                                "summary"
+                            ]
+                        }
+                    }
+                }
+            ],
+            "responses": [
+                {
+                    "is": {
+                        "body": "<%- stringify('one-issue.ejs') %>"
+                    }
+                }
+            ]
+        }
+    ]
+}
