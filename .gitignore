@@ -153,3 +153,6 @@ docs/
 # Uplaoded
 uploads/*.json
 !uploads/demo.json
+
+# Mountebank
+.mbdb/
