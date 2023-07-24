@@ -3,6 +3,7 @@ import Fastify from "fastify";
 import fastifyView from "@fastify/view";
 import fastifyAutoload from "@fastify/autoload";
 import fastifyMultipart from "@fastify/multipart";
+import fastifyFormbody from "@fastify/formbody";
 
 export function buildServer({ logger = true } = {}) {
   const fastify = Fastify({
@@ -16,6 +17,7 @@ export function buildServer({ logger = true } = {}) {
   });
 
   fastify.register(fastifyMultipart);
+  fastify.register(fastifyFormbody);
 
   fastify.register(fastifyAutoload, {
     dir: path.join(__dirname, "routes"),
