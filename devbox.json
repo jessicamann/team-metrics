@@ -3,7 +3,8 @@
         "nodejs@18.16.0"
     ],
     "env": {
-        "TESTCONTAINERS_DOCKER_SOCKET_OVERRIDE": "/var/run/docker.sock"
+        "TESTCONTAINERS_DOCKER_SOCKET_OVERRIDE": "/var/run/docker.sock",
+        "TESTCONTAINERS_RYUK_DISABLED": "true"
     },
     "shell": {
         "init_hook": [
