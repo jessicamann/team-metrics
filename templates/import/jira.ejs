@@ -32,7 +32,7 @@
                 <div class="field">
                     <label class="label">API Key</label>
                     <div class="control has-icons-left has-icons-right">
-                        <input name="apiKey" class="input" type="password" value="abc" required>
+                        <input name="token" class="input" type="password" value="abc" required>
                         <span class="icon is-small is-left">
                             <i class="fas fa-lock"></i>
                         </span>
@@ -60,11 +60,17 @@
                 <div class="field">
                     <label class="label">Status</label>
                     <div class="control">
-                        <input name="startStatus" class="input" type="text" value="progress" placeholder="In progress"
-                            required>
+                        <input name="startStatus" class="input" type="text" value="in progress"
+                            placeholder="In progress" required>
                     </div>
                 </div>
 
+                <div class="field">
+                    <label class="label">Finish Status</label>
+                    <div class="control">
+                        <input name="finishStatus" class="input" type="text" value="done" placeholder="done" required>
+                    </div>
+                </div>
                 <div class="field is-grouped">
                     <div class="control">
                         <button type="submit" class="button is-link">Import</button>

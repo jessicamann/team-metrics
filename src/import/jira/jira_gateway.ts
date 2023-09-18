@@ -1,6 +1,18 @@
 import { InputData } from "@app/common/repository";
 import { groupBy } from "lodash";
 import { Maybe, Nothing } from "purify-ts";
+import typia, { tags } from "typia";
+import { allIssues } from "./issues";
+import { Version3Client } from "jira.js";
+
+export interface JiraRetrieval {
+  host: string & tags.Format<"url">;
+  email: string & tags.Format<"email">;
+  token: string;
+  jql: string;
+  startStatus: string;
+  finishStatus: string;
+}
 
 interface MinimumChangelog {
   created: string;
@@ -38,10 +50,10 @@ function sortByDate(a: FlatItemChange, b: FlatItemChange): number {
   return Date.parse(a.created) - Date.parse(b.created);
 }
 
-export function startAndEndDateFor(
+function statusChangesIn(
   changelog: Array<MinimumChangelog>,
-): Maybe<StartEndDate> {
-  const statusChanges = changelog.reduce((acc, change) => {
+): Array<FlatItemChange> {
+  return changelog.reduce((acc, change) => {
     const statusChanges = change.items.filter(
       (item) => item.field === "status",
     );
@@ -56,10 +68,18 @@ export function startAndEndDateFor(
       })),
     ];
   }, new Array<FlatItemChange>());
+}
+
+export function startAndEndDateFor(
+  changelog: Array<MinimumChangelog>,
+  startingStatus = "in progress",
+  finishStatus = "done",
+): Maybe<StartEndDate> {
+  const statusChanges = statusChangesIn(changelog);
 
   const changesByTransition = groupBy(
     statusChanges,
-    (t) => `${t.fromString || ""}_${t.toString}`,
+    (t) => `${t.fromString}_${t.toString}`,
   );
 
   const uniqueStatusTransitions = Object.entries(changesByTransition).map(
@@ -70,10 +90,10 @@ export function startAndEndDateFor(
   );
 
   const start = uniqueStatusTransitions.find(
-    (t) => lowerStringOf(t.toString) === "in progress",
+    (t) => lowerStringOf(t.toString) === startingStatus,
   );
   const end = uniqueStatusTransitions.find(
-    (t) => lowerStringOf(t.toString) === "done",
+    (t) => lowerStringOf(t.toString) === finishStatus,
   );
 
   return start && end
@@ -90,4 +110,33 @@ export function inputDataFrom(issue: MinimumIssue): Maybe<InputData> {
       feature: "",
     };
   });
+}
+
+export async function flowMetrics(
+  jiraRetrieval: JiraRetrieval,
+): Promise<Array<InputData>> {
+  const issues = await allIssues(
+    new Version3Client({
+      host: jiraRetrieval.host,
+      authentication: {
+        basic: {
+          email: jiraRetrieval.email,
+          apiToken: jiraRetrieval.token,
+        },
+      },
+    }),
+    jiraRetrieval.jql,
+    { maxResults: 150 },
+  );
+
+  const inputData = issues
+    .map((issue) => Maybe.encase(() => typia.assert<MinimumIssue>(issue)))
+    .reduce((acc, potentialIssue) => {
+      return potentialIssue.caseOf({
+        Just: (issue) => [...acc, inputDataFrom(issue)],
+        Nothing: () => acc,
+      });
+    }, new Array<Maybe<InputData>>());
+
+  return Maybe.catMaybes(inputData);
 }
