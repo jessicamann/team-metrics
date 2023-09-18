@@ -33,3 +33,10 @@ export async function save(stream: Readable): Promise<string> {
 
   return id;
 }
+
+export function saveJson(inputData: Array<InputData>): string {
+  const id = generate(5);
+  writeFileSync(`./uploads/${id}.json`, JSON.stringify(inputData));
+
+  return id;
+}

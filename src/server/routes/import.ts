@@ -1,9 +1,7 @@
-import { z } from "zod";
-import { allIssues } from "@app/import/jira/issues";
 import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
-import { Version3Client } from "jira.js";
 import { JiraRetrieval, flowMetrics } from "@app/import/jira/jira_gateway";
 import typia from "typia";
+import { saveJson } from "@app/common/repository";
 
 export default async function (f: FastifyInstance) {
   f.get("/import/jira", (_: FastifyRequest, reply: FastifyReply) => {
@@ -16,10 +14,9 @@ export default async function (f: FastifyInstance) {
       const importRequest = typia.assert<JiraRetrieval>(request.body);
 
       const inputData = await flowMetrics(importRequest);
+      const id = saveJson(inputData);
 
-      console.dir(inputData, { depth: null });
-
-      return reply.code(200).send();
+      return reply.code(303).header("location", `/data/${id}`).send();
     },
   );
 }
