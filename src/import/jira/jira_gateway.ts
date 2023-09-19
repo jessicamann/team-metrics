@@ -84,7 +84,7 @@ export function startAndEndDateFor(
 
   const uniqueStatusTransitions = Object.entries(changesByTransition).map(
     ([_key, changes]) => {
-      const [newest, ..._rest] = [...changes].sort(sortByDate);
+      const [newest] = [...changes].sort(sortByDate);
       return newest;
     },
   );

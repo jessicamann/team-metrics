@@ -8,6 +8,13 @@
   "rules": {
     "prettier/prettier": "error",
     "no-restricted-imports": "off",
+    "@typescript-eslint/no-unused-vars": [
+      "error", 
+      { 
+        "ignoreRestSiblings": true,
+        "argsIgnorePattern": "^_"
+      }
+    ],
     "@typescript-eslint/no-restricted-imports": [
       "error",
       {
