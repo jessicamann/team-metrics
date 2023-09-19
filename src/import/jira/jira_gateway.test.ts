@@ -64,7 +64,11 @@ describe("jira-gateway", () => {
       };
 
       it("returns first seen (eariest) start and end date", () => {
-        const startEndDate = startAndEndDateFor(issue.changelog.histories);
+        const startEndDate = startAndEndDateFor(
+          issue.changelog.histories,
+          "in progress",
+          "done",
+        );
 
         expect(startEndDate.extract()).toEqual({
           startDate: "2023-07-04T14:36:41.198+0000",
@@ -73,7 +77,11 @@ describe("jira-gateway", () => {
       });
 
       it("returns input data for finished issues", () => {
-        const inputData = inputDataFrom(typia.assert<MinimumIssue>(issue));
+        const inputData = inputDataFrom(
+          typia.assert<MinimumIssue>(issue),
+          "in progress",
+          "done",
+        );
 
         expect(inputData.extract()).toEqual({
           id: "B1-7",
@@ -112,10 +120,16 @@ describe("jira-gateway", () => {
       };
 
       it("returns nothing when not finished", () => {
-        expect(startAndEndDateFor(unfinishedIssue.changelog.histories)).toBe(
+        expect(
+          startAndEndDateFor(
+            unfinishedIssue.changelog.histories,
+            "in progress",
+            "done",
+          ),
+        ).toBe(Nothing);
+        expect(inputDataFrom(unfinishedIssue, "in progress", "done")).toBe(
           Nothing,
         );
-        expect(inputDataFrom(unfinishedIssue)).toBe(Nothing);
       });
 
       it("accepts issues with transitions other than state", () => {

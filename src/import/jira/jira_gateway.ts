@@ -72,8 +72,8 @@ function statusChangesIn(
 
 export function startAndEndDateFor(
   changelog: Array<MinimumChangelog>,
-  startingStatus = "in progress",
-  finishStatus = "done",
+  startingStatus: string,
+  finishStatus: string,
 ): Maybe<StartEndDate> {
   const statusChanges = statusChangesIn(changelog);
 
@@ -101,8 +101,16 @@ export function startAndEndDateFor(
     : Nothing;
 }
 
-export function inputDataFrom(issue: MinimumIssue): Maybe<InputData> {
-  return startAndEndDateFor(issue.changelog.histories).map((dates) => {
+export function inputDataFrom(
+  issue: MinimumIssue,
+  startStatus: string,
+  finishStatus: string,
+): Maybe<InputData> {
+  return startAndEndDateFor(
+    issue.changelog.histories,
+    startStatus,
+    finishStatus,
+  ).map((dates) => {
     return {
       id: issue.key,
       startDate: dates.startDate,
@@ -133,7 +141,14 @@ export async function flowMetrics(
     .map((issue) => Maybe.encase(() => typia.assert<MinimumIssue>(issue)))
     .reduce((acc, potentialIssue) => {
       return potentialIssue.caseOf({
-        Just: (issue) => [...acc, inputDataFrom(issue)],
+        Just: (issue) => [
+          ...acc,
+          inputDataFrom(
+            issue,
+            jiraRetrieval.startStatus,
+            jiraRetrieval.finishStatus,
+          ),
+        ],
         Nothing: () => acc,
       });
     }, new Array<Maybe<InputData>>());
