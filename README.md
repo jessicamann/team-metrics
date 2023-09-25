@@ -33,7 +33,6 @@ The file format expects a csv file with the following headers:
 # up next
 
 - (quality) missing tests...
-- deploy
 - import from jira...?
 - data store
 - share with others
