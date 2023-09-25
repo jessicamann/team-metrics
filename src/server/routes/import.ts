@@ -13,7 +13,12 @@ export default async function (f: FastifyInstance) {
     async (request: FastifyRequest, reply: FastifyReply) => {
       const importRequest = typia.assert<JiraRetrieval>(request.body);
 
-      const inputData = await flowMetrics(importRequest);
+      const inputData = await flowMetrics({
+        ...importRequest,
+        startStatus: importRequest.startStatus.toLowerCase().trim(),
+        finishStatus: importRequest.finishStatus.toLowerCase().trim(),
+      });
+
       const id = saveJson(inputData);
 
       return reply.code(303).header("location", `/data/${id}`).send();

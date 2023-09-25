@@ -1,86 +1,149 @@
 <!doctype html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
-    <script defer src="https://use.fontawesome.com/releases/v6.4.0/js/all.js"></script>
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css"
+    />
+    <script
+      defer
+      src="https://use.fontawesome.com/releases/v6.4.0/js/all.js"
+    ></script>
     <title>Import, Jira</title>
-</head>
+  </head>
 
-<body>
+  <body>
     <%- include("../navbar.ejs", {active: "" , dataSet: {}}) %>
-        <div class="container">
-            <h1 class="title">Jira Import</h1>
-            <h3 class="subtitle">Bring all cards relevant to your team using Jira's
-                query language (JQL)</h3>
+    <div class="container">
+      <div class="hero-body">
+        <h1 class="title">Import from Jira</h1>
+        <h3 class="subtitle">
+          Bring all cards relevant to your team using Jira's query language
+          (JQL)
+        </h3>
+      </div>
 
-            <form action="/import-jira-cards" method="post">
-                <div class="field">
-                    <label class="label">Email</label>
-                    <div class="control has-icons-left has-icons-right">
-                        <input name="email" class="input" type="email" value="youremail@yourorg.com"
-                            placeholder="youremail@yourorg.com" required>
-                        <span class="icon is-small is-left">
-                            <i class="fas fa-envelope"></i>
-                        </span>
-                    </div>
-                </div>
+      <section class="section">
+        <form
+          action="/import-jira-cards"
+          method="post"
+        >
+          <div class="field">
+            <label class="label">Email</label>
+            <div class="control has-icons-left has-icons-right">
+              <input
+                name="email"
+                class="input"
+                type="email"
+                placeholder="youremail@yourorg.com"
+                required
+              />
+              <span class="icon is-small is-left">
+                <i class="fas fa-envelope"></i>
+              </span>
+            </div>
+          </div>
 
-                <div class="field">
-                    <label class="label">API Key</label>
-                    <div class="control has-icons-left has-icons-right">
-                        <input name="token" class="input" type="password" value="abc" required>
-                        <span class="icon is-small is-left">
-                            <i class="fas fa-lock"></i>
-                        </span>
-                    </div>
-                </div>
+          <div class="field">
+            <label class="label">API Key</label>
+            <div class="control has-icons-left has-icons-right">
+              <input
+                name="token"
+                class="input"
+                type="password"
+                required
+              />
+              <span class="icon is-small is-left">
+                <i class="fas fa-lock"></i>
+              </span>
+              <p class="help">
+                Create one going to:
+                https://id.atlassian.com/manage-profile/security/api-tokens
+              </p>
+            </div>
+          </div>
 
-                <div class="field">
-                    <label class="label">Jira Host</label>
-                    <div class="control has-icons-left has-icons-right">
-                        <input name="host" class="input" type="url" value="https://yourorg.atlassian.net"
-                            placeholder="https://yourorg.atlassian.net" required>
-                        <span class="icon is-small is-left">
-                            <i class="fas fa-link"></i>
-                        </span>
-                    </div>
-                </div>
+          <div class="field">
+            <label class="label">Host</label>
+            <div class="control has-icons-left has-icons-right">
+              <input
+                name="host"
+                class="input"
+                type="url"
+                placeholder="https://company-name.atlassian.net"
+                required
+              />
+              <span class="icon is-small is-left">
+                <i class="fas fa-link"></i>
+              </span>
+              <p class="help">
+                Typically it looks like the following:
+                https://<strong>company-name</strong>.atlassian.net
+              </p>
+            </div>
+          </div>
 
-                <div class="field">
-                    <label class="label">JQL</label>
-                    <div class="control">
-                        <textarea name="jql" class="textarea" placeholder="JQL" required>jql</textarea>
-                    </div>
-                </div>
+          <div class="field">
+            <label class="label">JQL</label>
+            <div class="control">
+              <textarea
+                name="jql"
+                class="textarea"
+                placeholder="JQL"
+                required
+              >
+jql</textarea
+              >
+            </div>
+          </div>
 
-                <div class="field">
-                    <label class="label">Start Status</label>
-                    <div class="control">
-                        <input name="startStatus" class="input" type="text" value="in progress"
-                            placeholder="In progress" required>
-                    </div>
-                </div>
+          <div class="field">
+            <label class="label">Start Status</label>
+            <div class="control">
+              <input
+                name="startStatus"
+                class="input"
+                type="text"
+                value="in progress"
+                placeholder="In progress"
+                required
+              />
+            </div>
+          </div>
 
-                <div class="field">
-                    <label class="label">Finish Status</label>
-                    <div class="control">
-                        <input name="finishStatus" class="input" type="text" value="done" placeholder="done" required>
-                    </div>
-                </div>
-                <div class="field is-grouped">
-                    <div class="control">
-                        <button type="submit" class="button is-link">Import</button>
-                    </div>
-                    <div class="control">
-                        <button class="button is-link is-light">Back</button>
-                    </div>
-                </div>
-            </form>
-        </div>
-</body>
-
+          <div class="field">
+            <label class="label">Finish Status</label>
+            <div class="control">
+              <input
+                name="finishStatus"
+                class="input"
+                type="text"
+                value="done"
+                placeholder="done"
+                required
+              />
+            </div>
+          </div>
+          <div class="field is-grouped">
+            <div class="control">
+              <button
+                type="submit"
+                class="button is-link"
+              >
+                Import
+              </button>
+            </div>
+            <div class="control">
+              <button class="button is-link is-light">Back</button>
+            </div>
+          </div>
+        </form>
+      </section>
+    </div>
+  </body>
 </html>
