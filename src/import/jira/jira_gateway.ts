@@ -1,9 +1,10 @@
 import { InputData } from "@app/common/repository";
 import { groupBy } from "lodash";
-import { Maybe, Nothing } from "purify-ts";
+import { EitherAsync, Maybe, Nothing } from "purify-ts";
 import typia, { tags } from "typia";
 import { allIssues } from "./issues";
 import { Version3Client } from "jira.js";
+import { ImportError } from "@app/server/errors";
 
 export interface JiraRetrieval {
   host: string & tags.Format<"url">;
@@ -118,6 +119,14 @@ export function inputDataFrom(
       feature: "",
     };
   });
+}
+
+export function flowMetricsE(
+  jiraRetrieval: JiraRetrieval,
+): EitherAsync<Error, Array<InputData>> {
+  return EitherAsync<Error, Array<InputData>>(() =>
+    flowMetrics(jiraRetrieval),
+  ).mapLeft((e) => new ImportError(e.message, { cause: e.cause }));
 }
 
 export async function flowMetrics(

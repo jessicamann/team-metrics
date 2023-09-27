@@ -2,6 +2,7 @@ import csv from "csvtojson";
 import { generate } from "randomstring";
 import { existsSync, writeFileSync } from "fs";
 import { Readable } from "stream";
+import { Either } from "purify-ts";
 
 export type InputData = {
   id: string;
@@ -39,4 +40,8 @@ export function saveJson(inputData: Array<InputData>): string {
   writeFileSync(`./uploads/${id}.json`, JSON.stringify(inputData));
 
   return id;
+}
+
+export function saveJsonE(inputData: Array<InputData>): Either<Error, string> {
+  return Either.of(saveJson(inputData));
 }
