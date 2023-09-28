@@ -28,9 +28,24 @@
         </h3>
       </div>
 
+      <% if (errors.length > 0) { %>
+      <div class="notification is-danger is-light">
+        <button class="delete"></button>
+        <ul>
+          <% errors.forEach(function(error) { %>
+          <li><%- error.message %></li>
+
+          <% if ((error.invalidParams || []).length > 0) {
+          error.invalidParams.forEach(function(params) { %>
+          <li><%- params.name %>: <%- params.reason %></li>
+          <% }); %> <% } %> <% }) %>
+        </ul>
+      </div>
+      <% } %>
+
       <section class="section">
         <form
-          action="/import-jira-cards"
+          action="/import/jira"
           method="post"
         >
           <div class="field">
@@ -41,6 +56,7 @@
                 class="input"
                 type="email"
                 placeholder="youremail@yourorg.com"
+                value="<%- data.email -%>"
                 required
               />
               <span class="icon is-small is-left">
@@ -56,6 +72,7 @@
                 name="token"
                 class="input"
                 type="password"
+                value="<%- data.token -%>"
                 required
               />
               <span class="icon is-small is-left">
@@ -76,6 +93,7 @@
                 class="input"
                 type="url"
                 placeholder="https://company-name.atlassian.net"
+                value="<%- data.host -%>"
                 required
               />
               <span class="icon is-small is-left">
@@ -95,6 +113,7 @@
                 name="jql"
                 class="textarea"
                 placeholder="JQL"
+                value="<%- data.jql -%>"
                 required
               >
 jql</textarea
@@ -111,6 +130,7 @@ jql</textarea
                 type="text"
                 value="in progress"
                 placeholder="In progress"
+                value="<%- data.startStatus -%>"
                 required
               />
             </div>
@@ -125,6 +145,7 @@ jql</textarea
                 type="text"
                 value="done"
                 placeholder="done"
+                value="<%- data.finishStatus -%>"
                 required
               />
             </div>
@@ -146,4 +167,17 @@ jql</textarea
       </section>
     </div>
   </body>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      (document.querySelectorAll(".notification .delete") || []).forEach(
+        ($delete) => {
+          const $notification = $delete.parentNode;
+
+          $delete.addEventListener("click", () => {
+            $notification.parentNode.removeChild($notification);
+          });
+        },
+      );
+    });
+  </script>
 </html>

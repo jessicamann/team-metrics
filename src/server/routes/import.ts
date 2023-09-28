@@ -11,23 +11,34 @@ import {
 
 export default async function (f: FastifyInstance) {
   f.get("/import/jira", (_: FastifyRequest, reply: FastifyReply) => {
-    reply.view("/templates/import/jira.ejs", { text: "text" });
+    reply.view("/templates/import/jira.ejs", {
+      text: "text",
+      data: {
+        host: "",
+        email: "",
+        token: "",
+        jql: "",
+        startStatus: "",
+        finishStatus: "",
+      },
+      errors: [],
+    });
   });
 
-  f.post(
-    "/import-jira-cards",
-    (request: FastifyRequest, reply: FastifyReply) => {
-      return validateImportRequest(request)
-        .map(toSaneRequest)
-        .chain(importFromJira)
-        .mapLeft(toProblemResponse)
-        .caseOf({
-          Left: (e) => reply.code(e.status).send(e),
-          Right: (id) =>
-            reply.code(303).header("location", `/data/${id}`).send(),
-        });
-    },
-  );
+  f.post("/import/jira", (request: FastifyRequest, reply: FastifyReply) => {
+    return validateImportRequest(request)
+      .map(toSaneRequest)
+      .chain(importFromJira)
+      .mapLeft(toProblemResponse)
+      .caseOf({
+        Left: (e) =>
+          reply.view("/templates/import/jira.ejs", {
+            errors: [{ message: e.title }],
+            data: request.body,
+          }),
+        Right: (id) => reply.code(303).header("location", `/data/${id}`).send(),
+      });
+  });
 }
 
 function validateImportRequest(
