@@ -33,7 +33,7 @@
         <button class="delete"></button>
         <ul>
           <% errors.forEach(function(error) { %>
-          <li><%- error.message %></li>
+          <li><%- error.title %></li>
 
           <% if ((error.invalidParams || []).length > 0) {
           error.invalidParams.forEach(function(params) { %>

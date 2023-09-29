@@ -1,4 +1,5 @@
 import formAutoContent from "form-auto-content";
+import { parse } from "node-html-parser";
 import { saveJsonE } from "@app/common/repository";
 import { flowMetricsE } from "@app/import/jira/jira_gateway";
 import { buildServer } from "..";
@@ -8,7 +9,7 @@ import { ImportError } from "../errors";
 jest.mock("@app/common/repository");
 jest.mock("@app/import/jira/jira_gateway");
 
-describe("POST /import-jira-cards", () => {
+describe("POST /import/jira", () => {
   it("redirects to /data/{id} on successful import", async () => {
     (saveJsonE as jest.Mock).mockReturnValueOnce(Either.of("test-id"));
     (flowMetricsE as jest.Mock).mockReturnValueOnce(
@@ -19,7 +20,7 @@ describe("POST /import-jira-cards", () => {
 
     const response = await server.inject({
       method: "POST",
-      url: "/import-jira-cards",
+      url: "/import/jira",
       ...formAutoContent({
         email: "grogu@example.com",
         token: "thisissecret",
@@ -34,12 +35,12 @@ describe("POST /import-jira-cards", () => {
     expect(response.headers.location).toEqual("/data/test-id");
   });
 
-  it("returns bad request when request isn't correct", async () => {
+  it("shows validation errors and returns bad request when validation fails", async () => {
     const server = buildServer({ logger: false });
 
     const response = await server.inject({
       method: "POST",
-      url: "/import-jira-cards",
+      url: "/import/jira",
       ...formAutoContent({
         email: "grogu@example.com",
         token: "thisissecret",
@@ -50,18 +51,21 @@ describe("POST /import-jira-cards", () => {
       }),
     });
 
+    const errors = parse(response.body)
+      .querySelectorAll(".notification")
+      .flatMap((e) => e.getElementsByTagName("li"))
+      .map((e) => e.textContent);
+
+    expect(errors).toEqual(
+      expect.arrayContaining([
+        "Request does not match requirements",
+        '$input.host: string & Format<"url">',
+      ]),
+    );
     expect(response.statusCode).toEqual(400);
-    expect(JSON.parse(response.body)).toEqual({
-      type: "validation-error",
-      title: "Request does not match requirements",
-      status: 400,
-      invalidParams: [
-        { name: "$input.host", reason: 'string & Format<"url">' },
-      ],
-    });
   });
 
-  it("returns error when import fails", async () => {
+  it("shows import errors and returns bad gateway when integration fails", async () => {
     (flowMetricsE as jest.Mock).mockReturnValueOnce(
       EitherAsync.liftEither(
         Left(new ImportError("something bad during import")),
@@ -72,7 +76,7 @@ describe("POST /import-jira-cards", () => {
 
     const response = await server.inject({
       method: "POST",
-      url: "/import-jira-cards",
+      url: "/import/jira",
       ...formAutoContent({
         email: "grogu@example.com",
         token: "thisissecret",
@@ -83,15 +87,16 @@ describe("POST /import-jira-cards", () => {
       }),
     });
 
-    expect(JSON.parse(response.body)).toEqual({
-      type: "import-fail",
-      title: "something bad during import",
-      status: 503,
-    });
-    expect(response.statusCode).toEqual(503);
+    const errors = parse(response.body)
+      .querySelectorAll(".notification")
+      .flatMap((e) => e.getElementsByTagName("li"))
+      .map((e) => e.textContent);
+
+    expect(response.statusCode).toEqual(502);
+    expect(errors).toContain("something bad during import");
   });
 
-  it("returns error when something unknown happens", async () => {
+  it("shows errors and internal server error when something unknown happens", async () => {
     (saveJsonE as jest.Mock).mockImplementationOnce(() => {
       throw new RangeError("random error");
     });
@@ -100,7 +105,7 @@ describe("POST /import-jira-cards", () => {
 
     const response = await server.inject({
       method: "POST",
-      url: "/import-jira-cards",
+      url: "/import/jira",
       ...formAutoContent({
         email: "grogu@example.com",
         token: "thisissecret",
@@ -111,11 +116,11 @@ describe("POST /import-jira-cards", () => {
       }),
     });
 
+    const errors = parse(response.body)
+      .querySelectorAll(".notification")
+      .flatMap((e) => e.getElementsByTagName("li"))
+      .map((e) => e.textContent);
+    expect(errors).toContain("Something we didn't expect happened");
     expect(response.statusCode).toEqual(500);
-    expect(JSON.parse(response.body)).toEqual({
-      type: "unknown",
-      title: "Something we didn't expect happened",
-      status: 500,
-    });
   });
 });

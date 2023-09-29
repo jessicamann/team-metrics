@@ -32,8 +32,8 @@ export default async function (f: FastifyInstance) {
       .mapLeft(toProblemResponse)
       .caseOf({
         Left: (e) =>
-          reply.view("/templates/import/jira.ejs", {
-            errors: [{ message: e.title }],
+          reply.code(e.status).view("/templates/import/jira.ejs", {
+            errors: [e],
             data: request.body,
           }),
         Right: (id) => reply.code(303).header("location", `/data/${id}`).send(),
@@ -58,7 +58,7 @@ function toProblemResponse<T extends Error>(e: T): ProblemResponse {
     return {
       type: e.name,
       title: e.message,
-      status: 503,
+      status: 502,
     };
   } else {
     return {
