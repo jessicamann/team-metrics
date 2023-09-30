@@ -156,3 +156,6 @@ uploads/*.json
 
 # Mountebank
 .mbdb/
+
+# Public (generated)
+public/styles.css

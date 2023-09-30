@@ -4,6 +4,7 @@ import fastifyView from "@fastify/view";
 import fastifyAutoload from "@fastify/autoload";
 import fastifyMultipart from "@fastify/multipart";
 import fastifyFormbody from "@fastify/formbody";
+import fastifyStatic from "@fastify/static";
 
 export function buildServer({ logger = true } = {}) {
   const fastify = Fastify({
@@ -18,6 +19,11 @@ export function buildServer({ logger = true } = {}) {
 
   fastify.register(fastifyMultipart);
   fastify.register(fastifyFormbody);
+  fastify.register(fastifyStatic, {
+    root: path.join(__dirname, "../../public"),
+    prefix: "/public",
+    prefixAvoidTrailingSlash: true,
+  });
 
   fastify.register(fastifyAutoload, {
     dir: path.join(__dirname, "routes"),
@@ -31,7 +37,8 @@ export function buildServer({ logger = true } = {}) {
     reply.code(303).header("location", `/oops`).send();
   });
 
-  fastify.setErrorHandler((e, req, reply) => {
+  fastify.setErrorHandler((e, _req, reply) => {
+    fastify.log.error(_req);
     fastify.log.error(e);
     reply.code(500).send({
       error: "internal server error; we'll take a look on our end.",

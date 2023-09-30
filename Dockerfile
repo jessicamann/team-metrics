@@ -24,6 +24,7 @@ WORKDIR /app
 COPY --from=builder /app/dist ./dist/
 COPY --from=builder /app/templates ./templates
 COPY --from=builder /app/uploads ./uploads
+COPY --from=builder /app/public ./public
 COPY --from=dependencies /app/node_modules ./node_modules
 
 USER node
