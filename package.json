@@ -61,7 +61,7 @@
     "@fastify/formbody": "^7.4.0",
     "@fastify/multipart": "^7.7.0",
     "@fastify/static": "^6.11.2",
-    "@fastify/view": "^8.1.0",
+    "@fastify/view": "^8.2.0",
     "csv-parser": "^3.0.0",
     "csvtojson": "^2.0.10",
     "date-fns": "^2.30.0",
