@@ -63,7 +63,7 @@
     "@fastify/static": "^6.11.2",
     "@fastify/view": "^8.1.0",
     "csv-parser": "^3.0.0",
-    "csvtojson": "^2.0.10",
+    "csvtojson": "^2.0.13",
     "date-fns": "^2.30.0",
     "ejs": "^3.1.9",
     "env-var": "^7.3.1",
